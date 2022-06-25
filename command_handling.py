@@ -12,8 +12,10 @@ def choose_command(cmd: str) -> tuple:
             return f.exit_program, []
         case ['hello']:
             return f.hello, cmd[1:]
-        case ['add', *args]:  # *args is a list of all the arguments after 'add'
+        case ['add', 'contact', *args] | ['add_contact', *args]:  # *args is a list of all the arguments after 'add'
             return f.add_contact, args
+        case ['remove', 'contact', *args] | ['remove_contact', *args]:
+            return f.remove_contact, args
         case ['change', 'phone', *args] | ['change_phone', *args]:  # check 'change phone' or 'change_phone'
             return f.change_phone, args
         case ['remove', 'phone', *args] | ['remove_phone', *args]:

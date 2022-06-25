@@ -182,6 +182,9 @@ class AddressBook(UserDict):
     def add_record(self, name: str, record: Record) -> None:
         self.data[name] = record
 
+    def remove_record(self, name: str):
+        self.data.pop(name)
+
     def save_to(self, filename: str = 'database/contacts_db') -> str:
         path = Path(filename)
         path.mkdir(parents=True, exist_ok=True)

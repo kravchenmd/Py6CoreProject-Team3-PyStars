@@ -56,7 +56,7 @@ def add_contact(contacts: AddressBook, name: str, phone: str = '', birthday: str
                 contacts.data[name].add_birthday(b)
             except FieldException as msg:
                 return str(msg)
-        return "Contact was updated successfully!"
+        return "Contact has been updated successfully!"
     else:
         contact_record = Record(n)
         if phone:
@@ -64,7 +64,16 @@ def add_contact(contacts: AddressBook, name: str, phone: str = '', birthday: str
         if birthday:
             contact_record.add_birthday(b)
         contacts.add_record(name, contact_record)
-        return f"Contact was created successfully!"
+        return f"Contact has been created successfully!"
+
+
+@func_arg_error
+def remove_contact(contacts: AddressBook, name: str) -> str:
+    if name not in contacts.data.keys():
+        return "ERROR: There is no contact with this name!"
+    
+    contacts.remove_record(name)
+    return f"Contact {name} has been removed successfully!"
 
 
 @func_arg_error
