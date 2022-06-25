@@ -68,7 +68,7 @@ def add_contact(contacts: AddressBook, name: str, phone: str = '', birthday: str
 
 
 @func_arg_error
-def edit_phone(contacts: AddressBook, name: str, phone: str, new_phone: str) -> str:
+def change_phone(contacts: AddressBook, name: str, phone: str, new_phone: str) -> str:
     if name not in contacts.data.keys():
         return f"There is no contact with name '{name}'"
 
@@ -78,12 +78,12 @@ def edit_phone(contacts: AddressBook, name: str, phone: str, new_phone: str) -> 
     except ValueError as err:
         return f"ERROR: {err}"
 
-    result = contacts.data.get(name).edit_phone(p, new_p)
+    result = contacts.data.get(name).change_phone(p, new_p)
     return result
 
 
 @func_arg_error
-def edit_birthday(contacts: AddressBook, name: str, new_birthday: str) -> str:
+def change_birthday(contacts: AddressBook, name: str, new_birthday: str) -> str:
     if name not in contacts.data.keys():
         return f"There is no contact with name '{name}'"
 
@@ -92,7 +92,7 @@ def edit_birthday(contacts: AddressBook, name: str, new_birthday: str) -> str:
     except ValueError as err:
         return f"ERROR: {err}"
 
-    result = contacts.data.get(name).edit_birthday(b)
+    result = contacts.data.get(name).change_birthday(b)
     return result
 
 

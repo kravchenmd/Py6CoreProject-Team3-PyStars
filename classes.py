@@ -113,7 +113,7 @@ class Record:
                 self.phone_list.remove(el)
         return "Phone was removed successfully!"
 
-    def edit_phone(self, phone: Phone, new_phone: Phone) -> str:
+    def change_phone(self, phone: Phone, new_phone: Phone) -> str:
         if phone not in self:
             return "Phone can't be changed: it's not in the list of the contact!"
         for el in self.phone_list:
@@ -132,7 +132,7 @@ class Record:
             return '-'
         return self.birthday.birthday_date()
 
-    def edit_birthday(self, new_birthday: Birthday) -> str:
+    def change_birthday(self, new_birthday: Birthday) -> str:
         if self.birthday is None:
             return "Birthday field of this contact is empty: fill it!"
         self.birthday = new_birthday
