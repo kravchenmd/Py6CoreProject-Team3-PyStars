@@ -82,14 +82,34 @@ class Birthday(Field):
         return self.value.day
 
 
+class Email(Field):
+    def __init__(self, value: str = '') -> None:
+        super().__init__(value)
+
+    @Field.value.setter
+    def value(self, value: str) -> None:
+        # verification parameters:
+        # starts from letter, Latin letters and numbers, @, letters divided by 1 dot
+        pattern = r'\b[a-zA-Z]{1}[\w]+@[a-zA-Z]+\.[a-zA-Z]+'
+        if re.match(pattern, value):
+            Field.value.fset(self, value)
+        else:
+            raise ValueError("Check please email format:\n" +
+                             "Example: user01@domain.com")
+
+    def get_email(self) -> str:
+        return self.value
+
+
 class Record:
     def __init__(self, name: Name) -> None:
         self.name: Name = name
         self.phone_list: list[Phone] = []
+        self.email_list: list[Email] = []
         self.birthday: Union[Birthday, None] = None
 
     def __str__(self) -> str:
-        return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}\t{self.get_birthday() : >10}\n"
+        return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
 
     def add_phone(self, phone: Phone) -> str:
         if phone.get_phone() in [phone.get_phone() for phone in self.phone_list]:
@@ -134,6 +154,34 @@ class Record:
             return "Birthday field of this contact is empty: fill it!"
         self.birthday = new_birthday
         return f"Birthday was changed successfully!"
+
+    def add_email(self, email: Email) -> str:
+        if email.get_email() in [email.get_email() for email in self.email_list]:
+            raise FieldException("This email is already in the list of the contact!")
+        self.email_list.append(email)
+        return "Contact was updated successfully!"
+
+    def get_emails(self) -> str:  # return emails in one string
+        if not self.email_list:
+            return '-'
+        return ', '.join([email.get_email() for email in self.email_list])
+
+    def remove_email(self, email: Email) -> str:
+        if email.get_email() not in [el.get_email() for el in self.email_list]:
+            return "Email can't be removed: it's not in the list of the contact!"
+        for el in self.email_list:
+            if el.get_email() == email.get_email():
+                self.email_list.remove(el)
+        return "Email was removed successfully!"
+
+    def edit_email(self, email: Email, new_email: Email) -> str:
+        if email.get_email() not in [el.get_email() for el in self.email_list]:
+            return "Email can't be changed: it's not in the list of the contact!"
+        for el in self.email_list:
+            if el.get_email() == email.get_email():
+                self.email_list.remove(el)
+                self.email_list.append(new_email)
+                return f"Email number was changed successfully!"
 
 
 class AddressBook(UserDict):
