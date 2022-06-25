@@ -16,14 +16,16 @@ def choose_command(cmd: str) -> tuple:
             return f.add_contact, args
         case ['change', 'phone', *args] | ['change_phone', *args]:  # check 'change phone' or 'change_phone'
             return f.change_phone, args
-        case ['remove', *args]:
+        case ['remove', 'phone', *args] | ['remove_phone', *args]:
             return f.remove_phone, args
-        case ['phone', *args]:
+        case ['phones', *args] | ['show', 'phones', *args] | ['show_phones', *args]:
             return f.show_phone, args
         case ['show', 'all'] | ['show_all']:
             return f.show_all_phones, []
         case ['change', 'birthday', *args] | ['change_birthday', *args]:
             return f.change_birthday, args
+        case ['remove', 'birthday', *args] | ['remove_birthday', *args]:
+            return f.remove_birthday, args
         case ['days', 'to', 'birthday', *args] | ['days_to_birthday', *args]:
             return f.days_to_birthday, args
         case ['save']:

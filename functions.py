@@ -146,6 +146,15 @@ def days_to_birthday(contacts: AddressBook, name: str) -> str:
 
 
 @func_arg_error
+def remove_birthday(contacts: AddressBook, name: str) -> str:
+    if name not in contacts.data.keys():
+        return f"There is no contact with name '{name}'"
+
+    result = contacts.data.get(name).remove_birthday()
+    return result
+
+
+@func_arg_error
 def exit_program():
     return "Good bye!"
 

@@ -98,7 +98,7 @@ class Record:
         if phone in self:
             raise FieldException("This phone number is already in the list of the contact!")
         self.phone_list.append(phone)
-        return "Contact was updated successfully!"
+        return "Contact has been updated successfully!"
 
     def get_phones(self) -> str:  # return phones in one string
         if not self.phone_list:
@@ -111,7 +111,7 @@ class Record:
         for el in self.phone_list:
             if el.get_phone() == phone.get_phone():
                 self.phone_list.remove(el)
-        return "Phone was removed successfully!"
+        return "Phone has been removed successfully!"
 
     def change_phone(self, phone: Phone, new_phone: Phone) -> str:
         if phone not in self:
@@ -120,7 +120,7 @@ class Record:
             if el.get_phone() == phone.get_phone():
                 self.phone_list.remove(el)
                 self.phone_list.append(new_phone)
-                return f"Phone number was changed successfully!"
+                return f"Phone number has been changed successfully!"
 
     def add_birthday(self, birthday: Birthday) -> None:
         if self.birthday is not None:
@@ -136,7 +136,13 @@ class Record:
         if self.birthday is None:
             return "Birthday field of this contact is empty: fill it!"
         self.birthday = new_birthday
-        return f"Birthday was changed successfully!"
+        return f"Birthday has been changed successfully!"
+    
+    def remove_birthday(self):
+        if self.birthday is None:
+            return "Birthday field of this contact is empty!"
+        self.birthday = None
+        return f"Birthday has been removed successfully!"
 
 
 class AddressBook(UserDict):
@@ -182,7 +188,7 @@ class AddressBook(UserDict):
 
         with shelve.open(filename) as db:
             db['contacts'] = dict(self.data)
-        return f"Contacts were saved to '{filename}' successfully!"
+        return f"Contacts have been saved to '{filename}' successfully!"
 
     @staticmethod
     def load_from(filename: str = 'database/contacts_db'):
@@ -193,7 +199,7 @@ class AddressBook(UserDict):
         with shelve.open(filename) as db:
             _ = AddressBook()
             _.data = db['contacts']
-            return _.data, f"Contacts were loaded from '{filename}' successfully!"
+            return _.data, f"Contacts have been loaded from '{filename}' successfully!"
 
     # Just for myself to remember
 
@@ -206,7 +212,7 @@ class AddressBook(UserDict):
     #         self.data = db['contacts']
     #         # temporary hot-fix because otherwise PyCharm complains about type of db['contacts'] or
     #         # noinspection PyTypeChecker
-    #     return f"Contacts were loaded from '{filename}' successfully!"
+    #     return f"Contacts have been loaded from '{filename}' successfully!"
 
     def find(self, search_string: str) -> str:
         result = ''
