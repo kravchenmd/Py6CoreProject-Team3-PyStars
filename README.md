@@ -4,7 +4,7 @@
 
 - :star: Michail Kravchenko (Team Leader)
 - :star: Larysa Dmytrenko (Scrum Master)
-- :star: Andrij Prytulskij (Developper, Presentation Manager)
+- :star: Andrij Prytulskij (Presentation Manager)
 
 <!-- ABOUT THE PROJECT -->
 
