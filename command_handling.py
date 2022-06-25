@@ -12,26 +12,26 @@ def choose_command(cmd: str) -> tuple:
             return f.exit_program, []
         case ['hello']:
             return f.hello, cmd[1:]
-        case ['add', *_]:
-            return f.add_contact, cmd[1:]
-        case ['change', *_]:
-            return f.edit_phone, cmd[1:]
-        case ['remove', *_]:
-            return f.remove_phone, cmd[1:]
-        case ['phone', *_]:
-            return f.show_phone, cmd[1:]
+        case ['add', *args]:
+            return f.add_contact, args
+        case ['change', 'phone', *args] | ['change_phone', *args]:
+            return f.edit_phone, args
+        case ['remove', *args]:
+            return f.remove_phone, args
+        case ['phone', *args]:
+            return f.show_phone, args
         case ['show', 'all'] | ['show_all']:
             return f.show_all_phones, []
-        case ['edit', 'birthday'] | ['edit_birthday']:
-            return f.edit_birthday, cmd[2:]
-        case ['days', 'to', 'birthday', *_] | ['days_to_birthday', *_]:
-            return f.days_to_birthday, cmd[1:]
+        case ['edit', 'birthday', *args] | ['edit_birthday', *args]:
+            return f.edit_birthday, args
+        case ['days', 'to', 'birthday', *args] | ['days_to_birthday', *args]:
+            return f.days_to_birthday, args
         case ['save']:
             return f.save_contacts, cmd[1:]
         case ['load']:
             return f.load_contacts, cmd[1:]
-        case ['find', *_]:
-            return f.find_contacts, cmd[1:]
+        case ['find', *args]:
+            return f.find_contacts, args
         case _:
             return None, "Unknown command!"
 
