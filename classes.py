@@ -111,11 +111,14 @@ class Record:
     def __str__(self) -> str:
         return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
 
+    def __contains__(self, item):  # to short this checking in code
+        return item.get_phone() in [phone.get_phone() for phone in self.phone_list]
+
     def add_phone(self, phone: Phone) -> str:
-        if phone.get_phone() in [phone.get_phone() for phone in self.phone_list]:
+        if phone in self:
             raise FieldException("This phone number is already in the list of the contact!")
         self.phone_list.append(phone)
-        return "Contact was updated successfully!"
+        return "Contact has been updated successfully!"
 
     def get_phones(self) -> str:  # return phones in one string
         if not self.phone_list:
@@ -123,21 +126,21 @@ class Record:
         return ', '.join([phone.get_phone() for phone in self.phone_list])
 
     def remove_phone(self, phone: Phone) -> str:
-        if phone.get_phone() not in [el.get_phone() for el in self.phone_list]:
+        if phone not in self:
             return "Phone can't be removed: it's not in the list of the contact!"
         for el in self.phone_list:
             if el.get_phone() == phone.get_phone():
                 self.phone_list.remove(el)
-        return "Phone was removed successfully!"
+        return "Phone has been removed successfully!"
 
-    def edit_phone(self, phone: Phone, new_phone: Phone) -> str:
-        if phone.get_phone() not in [el.get_phone() for el in self.phone_list]:
+    def change_phone(self, phone: Phone, new_phone: Phone) -> str:
+        if phone not in self:
             return "Phone can't be changed: it's not in the list of the contact!"
         for el in self.phone_list:
             if el.get_phone() == phone.get_phone():
                 self.phone_list.remove(el)
                 self.phone_list.append(new_phone)
-                return f"Phone number was changed successfully!"
+                return f"Phone number has been changed successfully!"
 
     def add_birthday(self, birthday: Birthday) -> None:
         if self.birthday is not None:
@@ -149,11 +152,17 @@ class Record:
             return '-'
         return self.birthday.birthday_date()
 
-    def edit_birthday(self, new_birthday: Birthday) -> str:
+    def change_birthday(self, new_birthday: Birthday) -> str:
         if self.birthday is None:
             return "Birthday field of this contact is empty: fill it!"
         self.birthday = new_birthday
-        return f"Birthday was changed successfully!"
+        return f"Birthday has been changed successfully!"
+    
+    def remove_birthday(self):
+        if self.birthday is None:
+            return "Birthday field of this contact is empty!"
+        self.birthday = None
+        return f"Birthday has been removed successfully!"
 
     def add_email(self, email: Email) -> str:
         if email.get_email() in [email.get_email() for email in self.email_list]:
@@ -221,13 +230,16 @@ class AddressBook(UserDict):
     def add_record(self, name: str, record: Record) -> None:
         self.data[name] = record
 
+    def remove_record(self, name: str):
+        self.data.pop(name)
+
     def save_to(self, filename: str = 'database/contacts_db') -> str:
         path = Path(filename)
         path.mkdir(parents=True, exist_ok=True)
 
         with shelve.open(filename) as db:
             db['contacts'] = dict(self.data)
-        return f"Contacts were saved to '{filename}' successfully!"
+        return f"Contacts have been saved to '{filename}' successfully!"
 
     @staticmethod
     def load_from(filename: str = 'database/contacts_db'):
@@ -238,7 +250,7 @@ class AddressBook(UserDict):
         with shelve.open(filename) as db:
             _ = AddressBook()
             _.data = db['contacts']
-            return _.data, f"Contacts were loaded from '{filename}' successfully!"
+            return _.data, f"Contacts have been loaded from '{filename}' successfully!"
 
     # Just for myself to remember
 
@@ -251,7 +263,7 @@ class AddressBook(UserDict):
     #         self.data = db['contacts']
     #         # temporary hot-fix because otherwise PyCharm complains about type of db['contacts'] or
     #         # noinspection PyTypeChecker
-    #     return f"Contacts were loaded from '{filename}' successfully!"
+    #     return f"Contacts have been loaded from '{filename}' successfully!"
 
     def find(self, search_string: str) -> str:
         result = ''

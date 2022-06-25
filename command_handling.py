@@ -8,67 +8,40 @@ def choose_command(cmd: str) -> tuple:
     cmd = parse_command(cmd)
 
     match cmd:
-        case ['close'] | ['exit'] | ['goodbye']:
+        case ['close'] | ['exit'] | ['goodbye']:  # compare with one of the options in '[...]' ('|' is OR)
             return f.exit_program, []
         case ['hello']:
             return f.hello, cmd[1:]
-        case ['add', *_]:
-            return f.add_contact, cmd[1:]
-        case ['change', 'phone', *_]:
-            return f.edit_phone, cmd[2:]
-        case ['change', 'email', *_]:
-            return f.edit_email, cmd[2:]
-        case ['remove', 'phone', *_]:
-            return f.remove_phone, cmd[2:]
-        case ['remove', 'email', *_]:
-            return f.remove_email, cmd[2:]
-        case ['phone', *_]:
-            return f.show_phone, cmd[1:]
+        case ['add', 'contact', *args] | ['add_contact', *args]:  # *args is a list of all the arguments after 'add'
+            return f.add_contact, args
+        case ['remove', 'contact', *args] | ['remove_contact', *args]:
+            return f.remove_contact, args
+        case ['change', 'phone', *args] | ['change_phone', *args]:  # check 'change phone' or 'change_phone'
+            return f.change_phone, args
+        case ['remove', 'phone', *args] | ['remove_phone', *args]:
+            return f.remove_phone, args
+        case ['phones', *args] | ['show', 'phones', *args] | ['show_phones', *args]:
+            return f.show_phone, args
         case ['show', 'all'] | ['show_all']:
             return f.show_all_phones, []
-        case ['edit', 'birthday', *_] | ['edit_birthday', *_]:
-            return f.edit_birthday, cmd[2:]
-        case ['days', 'to', 'birthday', *_] | ['days_to_birthday', *_]:
-            return f.days_to_birthday, cmd[3:]
+        case ['change', 'birthday', *args] | ['change_birthday', *args]:
+            return f.change_birthday, args
+        case ['remove', 'birthday', *args] | ['remove_birthday', *args]:
+            return f.remove_birthday, args
+        case ['days', 'to', 'birthday', *args] | ['days_to_birthday', *args]:
+            return f.days_to_birthday, args
+        case ['change', 'email', *args]:
+            return f.edit_email, args
+        case ['remove', 'email', *args]:
+            return f.remove_email, args
         case ['save']:
             return f.save_contacts, cmd[1:]
         case ['load']:
             return f.load_contacts, cmd[1:]
-        case ['find', *_]:
-            return f.find_contacts, cmd[1:]
-        case _:
+        case ['find', *args]:
+            return f.find_contacts, args
+        case _:  # '_' corresponds to the case when no match is found
             return None, "Unknown command!"
-
-    # Just in case here is old block with if-statements
-
-    # if cmd in EXIT_COMMANDS:
-    #     return exit_program, []
-    #
-    # cmd = parse_command(cmd)
-    # cmd_check = cmd[0].lower()
-    # if cmd_check == 'hello':
-    #     return hello, cmd[1:]
-    # if cmd_check == 'add':
-    #     return add_contact, cmd[1:]
-    # if cmd_check == 'change':
-    #     return edit_phone, cmd[1:]
-    # if cmd_check == 'remove':
-    #     return remove_phone, cmd[1:]
-    # if cmd_check == 'phone':
-    #     return show_phone, cmd[1:]
-    # if cmd_check == 'show' and len(cmd) > 1:
-    #     # take into account that this command consists 2 words
-    #     cmd_check = cmd[1].lower()
-    #     if cmd_check == 'all':
-    #         return show_all_phones, []
-    # if cmd_check == 'edit' and len(cmd) > 1:
-    #     # take into account that this command consists 2 words
-    #     cmd_check = cmd[1].lower()
-    #     if cmd_check == 'birthday':
-    #         return edit_birthday, cmd[2:]
-    # if cmd_check == 'days_to_birthday':
-    #     return days_to_birthday, cmd[1:]
-    # return None, "Unknown command!"
 
 
 def parse_command(cmd: str) -> list:
