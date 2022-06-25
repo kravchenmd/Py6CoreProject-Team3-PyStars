@@ -1,5 +1,5 @@
 from datetime import datetime
-from classes import AddressBook, Phone, Birthday, Name, Record, FieldException
+from classes import AddressBook, Phone, Birthday, Name, Email, Record, FieldException
 
 
 # This decorator handles the correct number of arguments that are passed into the function
@@ -16,14 +16,16 @@ def func_arg_error(func):
                 return "ERROR: This command needs 1 arguments: "\
                         f"'{'search_word' if f_name == 'find_contacts' else 'name'}' separated by 1 space! "
             if f_name in ('add_contact',):
-                return "ERROR: This command needs 1 obligatory argument 'name' and 2 supplementary " \
-                       "'phone' and 'birthday' separated by 1 space!"
+                return "ERROR: This command needs 1 obligatory argument 'name' and 3 supplementary " \
+                       "'phone', 'email' and 'birthday' separated by 1 space!"
             if f_name in ('edit_birthday',):
                 return "ERROR: This command needs 2 arguments: 'name' and 'birthday' separated by 1 space!"
             if f_name in ('remove_phone',):
                 return "ERROR: This command needs 2 arguments: 'name' and 'phone' separated by 1 space!"
             if f_name in ('edit_phone',):
                 return "ERROR: This command needs 3 arguments: 'name', 'phone' and 'new_phone' separated by 1 space!"
+            if f_name in ('edit_email',):
+                return "ERROR: This command needs 3 arguments: 'name', 'email' and 'new_email' separated by 1 space!"
             return "Some unhandled error occurred!"
 
     return wrapper
@@ -35,16 +37,17 @@ def hello() -> str:
 
 
 @func_arg_error
-def add_contact(contacts: AddressBook, name: str, phone: str = '', birthday: str = '') -> str:
+def add_contact(contacts: AddressBook, name: str, phone: str = '', email: str = '', birthday: str = '') -> str:
     try:
         n = Name(name)
         p = Phone(phone) if phone else None
+        e = Email(email) if email else None
         b = Birthday(birthday) if birthday else None
     except ValueError as err:
         return f"ERROR: {err}"
 
     if name in contacts.data.keys():
-        if not phone and not birthday:
+        if not phone and not birthday and not email:
             return "ERROR: The contact with this name is already created! Try to update it!"
         if phone:
             try:
@@ -56,6 +59,11 @@ def add_contact(contacts: AddressBook, name: str, phone: str = '', birthday: str
                 contacts.data[name].add_birthday(b)
             except FieldException as msg:
                 return str(msg)
+        if email:
+            try:
+                contacts.data[name].add_email(e)
+            except FieldException as msg:
+                return str(msg)
         return "Contact has been updated successfully!"
     else:
         contact_record = Record(n)
@@ -63,6 +71,8 @@ def add_contact(contacts: AddressBook, name: str, phone: str = '', birthday: str
             contact_record.add_phone(p)
         if birthday:
             contact_record.add_birthday(b)
+        if email:
+            contact_record.add_email(e)
         contacts.add_record(name, contact_record)
         return f"Contact has been created successfully!"
 
@@ -91,6 +101,21 @@ def change_phone(contacts: AddressBook, name: str, phone: str, new_phone: str) -
     return result
 
 
+@func_arg_error
+def edit_email(contacts: AddressBook, name: str, email: str, new_email: str) -> str:
+    if name not in contacts.data.keys():
+        return f"There is no contact with name '{name}'"
+
+    try:
+        old_e = Email(email)
+        new_e = Email(new_email)
+    except ValueError as err:
+        return f"ERROR: {err}"
+
+    result = contacts.data.get(name).edit_email(old_e, new_e)
+    return result
+
+  
 @func_arg_error
 def change_birthday(contacts: AddressBook, name: str, new_birthday: str) -> str:
     if name not in contacts.data.keys():
@@ -127,6 +152,30 @@ def show_phone(contacts: AddressBook, name: str) -> str:
         return f"There is no contact with name '{name}'"
 
     return contacts.get(name).get_phones()
+
+
+@func_arg_error
+def remove_email(contacts: AddressBook, name: str, email: str) -> str:
+    """
+    Remove email from the contact. But doesn't remove contact itself if it has no email.
+    """
+    if name not in contacts.data.keys():
+        return f"There is no contact with name '{name}'"
+
+    try:
+        e = Email(email)
+    except ValueError as err:
+        return f"ERROR: {err}"
+    result = contacts.data.get(name).remove_email(e)
+    return result
+
+
+@func_arg_error
+def show_email(contacts: AddressBook, name: str) -> str:
+    if name not in contacts.data.keys():
+        return f"There is no contact with name '{name}'"
+
+    return contacts.get(name).get_emails()
 
 
 @func_arg_error
