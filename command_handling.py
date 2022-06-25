@@ -14,18 +14,22 @@ def choose_command(cmd: str) -> tuple:
             return f.hello, cmd[1:]
         case ['add', *_]:
             return f.add_contact, cmd[1:]
-        case ['change', *_]:
-            return f.edit_phone, cmd[1:]
-        case ['remove', *_]:
-            return f.remove_phone, cmd[1:]
+        case ['change', 'phone', *_]:
+            return f.edit_phone, cmd[2:]
+        case ['change', 'email', *_]:
+            return f.edit_email, cmd[2:]
+        case ['remove', 'phone', *_]:
+            return f.remove_phone, cmd[2:]
+        case ['remove', 'email', *_]:
+            return f.remove_email, cmd[2:]
         case ['phone', *_]:
             return f.show_phone, cmd[1:]
         case ['show', 'all'] | ['show_all']:
             return f.show_all_phones, []
-        case ['edit', 'birthday'] | ['edit_birthday']:
+        case ['edit', 'birthday', *_] | ['edit_birthday', *_]:
             return f.edit_birthday, cmd[2:]
         case ['days', 'to', 'birthday', *_] | ['days_to_birthday', *_]:
-            return f.days_to_birthday, cmd[1:]
+            return f.days_to_birthday, cmd[3:]
         case ['save']:
             return f.save_contacts, cmd[1:]
         case ['load']:
