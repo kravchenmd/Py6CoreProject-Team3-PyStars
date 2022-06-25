@@ -91,8 +91,11 @@ class Record:
     def __str__(self) -> str:
         return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}\t{self.get_birthday() : >10}\n"
 
+    def __contains__(self, item):  # to short this checking in code
+        return item.get_phone() in [phone.get_phone() for phone in self.phone_list]
+
     def add_phone(self, phone: Phone) -> str:
-        if phone.get_phone() in [phone.get_phone() for phone in self.phone_list]:
+        if phone in self:
             raise FieldException("This phone number is already in the list of the contact!")
         self.phone_list.append(phone)
         return "Contact was updated successfully!"
@@ -103,7 +106,7 @@ class Record:
         return ', '.join([phone.get_phone() for phone in self.phone_list])
 
     def remove_phone(self, phone: Phone) -> str:
-        if phone.get_phone() not in [el.get_phone() for el in self.phone_list]:
+        if phone not in self:
             return "Phone can't be removed: it's not in the list of the contact!"
         for el in self.phone_list:
             if el.get_phone() == phone.get_phone():
@@ -111,7 +114,7 @@ class Record:
         return "Phone was removed successfully!"
 
     def edit_phone(self, phone: Phone, new_phone: Phone) -> str:
-        if phone.get_phone() not in [el.get_phone() for el in self.phone_list]:
+        if phone not in self:
             return "Phone can't be changed: it's not in the list of the contact!"
         for el in self.phone_list:
             if el.get_phone() == phone.get_phone():
