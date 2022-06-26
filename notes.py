@@ -6,10 +6,9 @@ from collections import UserList
 
 class Note:
     # note takes 2 parameters: text (mandatory) and tag (not obligatory)
-    def __init__(self, text: str, tags: list = None):
+    def __init__(self, text: str, tags: list = []):
         self.text = text
-        if len(tags) > 0:
-            self.tags = tags
+        self.tags = tags
 
     def __str__(self):
         return " ".join(self.tags) + " " + self.text
@@ -76,7 +75,7 @@ def exit(*args):
     path = 'database/notes_db.bin'
     with open(path, 'wb') as file:
         pickle.dump(notes, file)
-    return f'You notes saved in file {path}. Good bye!'
+    return f'Your notes saved in file {path}. Good bye!'
 
 
 COMMANDS = {
