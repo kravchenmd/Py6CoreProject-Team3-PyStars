@@ -272,3 +272,11 @@ class AddressBook(UserDict):
             if search_string.lower() in record.name.get_name().lower() or search_string in record.get_phones():
                 result += f"{record}"
         return result[:-1]  # remove last '\n'
+
+    def find_contact(self, search_string: str) -> str:
+
+        for record in self.data.values():
+
+            if search_string.lower() == record.name.get_name().lower():
+                return f'Search results for: "{search_string}" \n{record}'
+
