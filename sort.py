@@ -73,6 +73,32 @@ def start():
         main(scan_folder.resolve())
 
 
+# This decorator handles the correct number of arguments that are passed into the function
+def func_arg_error(func):
+    def wrapper(*args):
+        try:
+            result = func(*args)
+            return result
+        except TypeError:
+            f_name = func.__name__
+            if f_name in ('sort_folder',):
+                return "ERROR: This command has to be written with 1 argument!"
+            return "Some unhandled error occurred!"
+    return wrapper
+
+
+@func_arg_error
+def sort_folder(folder: str) -> str:
+    path = Path(folder)
+    if not path.exists():
+        return f"This folder ({folder}) does not exist!"
+
+    scan_folder = path
+    print(f'Start in folder {scan_folder.resolve()}')
+    main(scan_folder.resolve())
+    return f"Folder {folder} has been sorted!"
+
+
 if __name__ == '__main__':
     if sys.argv[1]:
         folder_for_scan = Path(sys.argv[1])

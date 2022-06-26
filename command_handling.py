@@ -1,11 +1,29 @@
+from typing import Union
+
 import functions as f
 from classes import AddressBook
+from sort import sort_folder
 
 
-def choose_command(cmd: str) -> tuple:
-    # redone with match-statement instead of if-ones
-    # code is more readable and shorter! =)
-    cmd = parse_command(cmd)
+def address_book_choose_command(cmd: list) -> tuple:
+    """
+    Commands for AddressBook mode:
+   - `close`, `exit`, `goodbye` - выход из программы
+    - `hello` - выводит приветствие
+    - `add` - добавление контакта в книгу. Количество аргументов может быть неполным. Например, 'add _name_' создаст контакт с пустыми полями номера телефона и даты рождения (при выводе заменяются '-'). Можно создать контакт только с именем и email, поставив 2 пробела после имени. Или же, например, с именем и датой рождения, поставив 3 пробела после имени (передавая пустые параметры для отсутствующих данных)
+    - `change phone` - изменение номера контакта. Пример: 'change _name_ _old_phone_ _new_phone_'
+    - `remove phone` - удаление телефона
+    - `change email` - изменение email. Пример: 'change _name_ _old_email_ _new_email_'
+    - `remove email` - удаление email
+    - `phone` - показать номер контакта по имени
+    - `email` - показать email по имени
+    - `show all`/`show_all` - вывести все контакты с пагинацией (по умолчанию 2)
+    - `edit birthday`/`edit_birthday` - изменить день рождения контакта
+    - `days to borthday`/`days_to_borthday` - сколько дней до дня рождения контакта
+    - `save`/`save_contacts` - сохранить контакты в файл, с использованием модуля `shelve`. По умолчанию сохранят в 'database/contacts.db'
+    - `load` - загрузить контакты из файла, с использованием модуля `shelve`. По умолчанию загружается из 'database/contacts.db'
+    - `find` - поиск контакта по имени или номеру телефона (ищет вхождения строки в этих полях)
+    """
 
     match cmd:
         case ['close'] | ['exit'] | ['goodbye']:  # compare with one of the options in '[...]' ('|' is OR)
@@ -40,7 +58,27 @@ def choose_command(cmd: str) -> tuple:
             return f.load_contacts, cmd[1:]
         case ['find', *args]:
             return f.find_contacts, args
+        case ['help']:
+            return None, sorting_choose_command.__doc__
         case _:  # '_' corresponds to the case when no match is found
+            return None, "Unknown command!"
+
+
+def sorting_choose_command(cmd: list) -> tuple:
+    """
+    Commands for sorting mode:
+    - 'close', 'exit', 'goodbye' - exit the program
+    - 'sort folder _path_', 'sort_folder _path_': sort the contacts by name
+    """
+
+    match cmd:
+        case ['close'] | ['exit'] | ['goodbye']:
+            return f.exit_program, []
+        case ['help']:
+            return None, sorting_choose_command.__doc__
+        case ['sort', 'folder', *args] | ['sort_folder', *args]:
+            return sort_folder, args
+        case _:
             return None, "Unknown command!"
 
 
@@ -48,10 +86,19 @@ def parse_command(cmd: str) -> list:
     return cmd.strip().split(' ')  # apply strip() as well to exclude spaces at the ends
 
 
-def handle_cmd(cmd: str, contacts: AddressBook) -> tuple:
-    func, result = choose_command(cmd)
-    if func:
-        args = [contacts] + result if func not in (f.hello, f.exit_program) else result
-        # else part to take into account hello() and show()
-        result = func(*args)
+def handle_cmd(cmd: str, contacts: Union[AddressBook, None], mode: str) -> tuple:
+    cmd = parse_command(cmd)
+
+    if mode == 'AddressBook':
+        func, result = address_book_choose_command(cmd)
+        if func:
+            args = [contacts] + result if func not in (f.hello, f.exit_program) else result
+            # else part to take into account hello() and show()
+            result = func(*args)
+
+    if mode == 'Sorting':
+        func, result = sorting_choose_command(cmd)
+        if func:
+            args = result
+            result = func(*args)
     return func, result
