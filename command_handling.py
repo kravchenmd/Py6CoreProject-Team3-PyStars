@@ -34,6 +34,8 @@ def choose_command(cmd: str) -> tuple:
             return f.edit_email, args
         case ['remove', 'email', *args]:
             return f.remove_email, args
+        case ['birthday', 'in', *args] | ['birthday in', *args]:
+            return f.birthday_in, args
         case ['save']:
             return f.save_contacts, cmd[1:]
         case ['load']:
