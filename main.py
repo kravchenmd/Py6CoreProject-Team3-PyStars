@@ -51,7 +51,10 @@ def main():
             contacts.data = data
         print(result)
 
+    # TODO Larisa: Initialization of Notes
+    # Просто пледложение по аналогии с AddressBook. Можно попробовать сделать по-другому
     if mode == 'Notes':
+        # notes = Notes()
         # arg = notes
         pass
 

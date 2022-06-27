@@ -106,7 +106,7 @@ def notes_choose_command(cmd: list) -> tuple:
         case ['find', 'text', *args] | ['find_text', *args]:
             return n.find_text, args
         case ['help']:
-            return None, address_book_choose_command.__doc__
+            return None, notes_choose_command.__doc__
         case _:  # '_' corresponds to the case when no match is found
             return None, "Unknown command!"
 
