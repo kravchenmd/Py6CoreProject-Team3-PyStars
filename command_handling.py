@@ -2,13 +2,17 @@ from typing import Union
 
 import functions as f
 from classes import AddressBook
+from notes import Notes
 from sort import sort_folder
+import notes as n
 
 
+# TODO Finist docstring
 def address_book_choose_command(cmd: list) -> tuple:
     """
+    !!! In progress !!!
     Commands for AddressBook mode:
-   - `close`, `exit`, `goodbye` - выход из программы
+    - `close`, `exit`, `goodbye` - выход из программы
     - `hello` - выводит приветствие
     - `add` - добавление контакта в книгу. Количество аргументов может быть неполным. Например, 'add _name_' создаст контакт с пустыми полями номера телефона и даты рождения (при выводе заменяются '-'). Можно создать контакт только с именем и email, поставив 2 пробела после имени. Или же, например, с именем и датой рождения, поставив 3 пробела после имени (передавая пустые параметры для отсутствующих данных)
     - `change phone` - изменение номера контакта. Пример: 'change _name_ _old_phone_ _new_phone_'
@@ -19,7 +23,7 @@ def address_book_choose_command(cmd: list) -> tuple:
     - `email` - показать email по имени
     - `show all`/`show_all` - вывести все контакты с пагинацией (по умолчанию 2)
     - `edit birthday`/`edit_birthday` - изменить день рождения контакта
-    - `days to borthday`/`days_to_borthday` - сколько дней до дня рождения контакта
+    - `days to birthday`/`days_to_birthday` - сколько дней до дня рождения контакта
     - `save`/`save_contacts` - сохранить контакты в файл, с использованием модуля `shelve`. По умолчанию сохранят в 'database/contacts.db'
     - `load` - загрузить контакты из файла, с использованием модуля `shelve`. По умолчанию загружается из 'database/contacts.db'
     - `find` - поиск контакта по имени или номеру телефона (ищет вхождения строки в этих полях)
@@ -68,13 +72,53 @@ def address_book_choose_command(cmd: list) -> tuple:
             return None, "Unknown command!"
 
 
+# TODO Finist commands and docstring
+def notes_choose_command(cmd: list) -> tuple:
+    """
+    !!! In progress !!!
+    Commands for AddressBook mode:
+    - `close`, `exit`, `goodbye` - выход из программы
+    - `add` - добавление контакта в книгу. Количество аргументов может быть неполным. Например, 'add _name_' создаст контакт с пустыми полями номера телефона и даты рождения (при выводе заменяются '-'). Можно создать контакт только с именем и email, поставив 2 пробела после имени. Или же, например, с именем и датой рождения, поставив 3 пробела после имени (передавая пустые параметры для отсутствующих данных)
+    - `change phone` - изменение номера контакта. Пример: 'change _name_ _old_phone_ _new_phone_'
+    - `remove phone` - удаление телефона
+    - `show all`/`show_all` - вывести все контакты с пагинацией (по умолчанию 2)
+    - `edit birthday`/`edit_birthday` - изменить день рождения контакта
+    - `save`/`save_contacts` - сохранить контакты в файл, с использованием модуля `shelve`. По умолчанию сохранят в 'database/contacts.db'
+    - `load` - загрузить контакты из файла, с использованием модуля `shelve`. По умолчанию загружается из 'database/contacts.db'
+    - `find` - поиск контакта по имени или номеру телефона (ищет вхождения строки в этих полях)
+    """
+
+    match cmd:
+        case ['close'] | ['exit'] | ['goodbye']:
+            return f.exit_program, []
+        case ['add', 'note', *args] | ['add_note', *args]:
+            return n.add_note, args
+        case ['delete', 'note', *args] | ['delete_note', *args]:
+            return n.delete_note, args
+        case ['edit', 'note', *args] | ['edit_note', *args]:
+            return n.edit_note, args
+        case ['show', 'notes'] | ['show_notes']:
+            return n.show_notes, []
+        # case ['save']:
+        #     return n.save_notes, cmd[1:]
+        # case ['load']:
+        #     return n.load_notes, cmd[1:]
+        case ['find', 'text', *args] | ['find_text', *args]:
+            return n.find_text, args
+        case ['help']:
+            return None, notes_choose_command.__doc__
+        case _:  # '_' corresponds to the case when no match is found
+            return None, "Unknown command!"
+
+
+# TODO Finist commands and docstring
 def sorting_choose_command(cmd: list) -> tuple:
     """
+    !!! In progress !!!
     Commands for sorting mode:
     - 'close', 'exit', 'goodbye' - exit the program
     - 'sort folder _path_', 'sort_folder _path_': sort the contacts by name
     """
-
     match cmd:
         case ['close'] | ['exit'] | ['goodbye']:
             return f.exit_program, []
@@ -86,25 +130,23 @@ def sorting_choose_command(cmd: list) -> tuple:
             return None, "Unknown command!"
 
 
-def parse_command(cmd: str) -> list:
-    # TODO попробовать lambda-функцию
-    return cmd.strip().split(' ')  # apply strip() as well to exclude spaces at the ends
+def handle_cmd(cmd: str, arg: Union[AddressBook, Notes, None], mode: str) -> tuple:
+    cmd = cmd.strip().split(' ')
 
+    match mode:
+        case 'AddressBook':
+            choose_command = address_book_choose_command
+        case 'Sorting':
+            choose_command = sorting_choose_command
+        case "Notes":
+            choose_command = notes_choose_command
+        case _:
+            return None, "ERROR: Unknown mode!"
 
-def handle_cmd(cmd: str, arg: Union[AddressBook, None], mode: str) -> tuple:
-    cmd = parse_command(cmd)
+    func, result = choose_command(cmd)
+    if func:
+        args = [arg] + result if func not in (f.hello, f.exit_program) else result
+        # else part to take into account hello() and show()
+        result = func(*args)
 
-    if mode == 'AddressBook':
-        func, result = address_book_choose_command(cmd)
-        if func:
-            args = [arg] + result if func not in (f.hello, f.exit_program) else result
-            # else part to take into account hello() and show()
-            result = func(*args)
-
-    if mode == 'Sorting':
-        func, result = sorting_choose_command(cmd)
-        if func:
-            args = result
-            # TODO check for exit_program
-            result = func(*args)
     return func, result

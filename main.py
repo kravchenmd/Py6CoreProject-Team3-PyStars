@@ -10,6 +10,8 @@ from command_handling import handle_cmd
 def main():
     mode = None
     contacts = None
+    notes = None
+    arg = None  # argument to pass to `handle_cmd()` depending on the mode
 
     start_message = "*** Console bot project ***\n" \
                     "***  Team #3 - PyStars  ***\n"
@@ -34,17 +36,29 @@ def main():
                     mode = 'AddressBook'
                     print("\nAddress book mode")
                 case 50:  # 2 - Note
-                    mode = 'Note'
-                    print("\nNote mode")
+                    mode = 'Notes'
+                    print("\nNotes mode")
                 case 51:  # 3 - Sorting
                     mode = 'Sorting'
                     print("\nSorting mode")
 
     if mode == 'AddressBook':
         contacts = AddressBook()
-        # TODO Load contacts from file
+        arg = contacts
+        # Load contacts from file
+        data, result = contacts.load_from()
+        if not (data is None):
+            contacts.data = data
+        print(result)
 
-    print("For help type `help` command")
+    # TODO Larisa: Initialization of Notes
+    # Просто пледложение по аналогии с AddressBook. Можно попробовать сделать по-другому
+    if mode == 'Notes':
+        # notes = Notes()
+        # arg = notes
+        pass
+
+    print("\nNOTE: For help type `help` command")
 
     while True:
         command = None
@@ -52,21 +66,12 @@ def main():
         while not command:
             command = input('Enter command: ')
 
-        if mode == 'AddressBook':
-            func, result = handle_cmd(command, contacts, mode)
-            print(result)
+        func, result = handle_cmd(command, arg, mode)
+        print(result)
 
-            if func == f.exit_program:
-                break
-            print()
-
-        if mode == 'Sorting':
-            func, result = handle_cmd(command, None, mode)
-            print(result)
-
-            if func == f.exit_program:
-                break
-            print()
+        if func == f.exit_program:
+            break
+        print()
 
 
 if __name__ == '__main__':
