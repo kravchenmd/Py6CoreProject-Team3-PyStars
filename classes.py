@@ -109,7 +109,8 @@ class Record:
         self.birthday: Union[Birthday, None] = None
 
     def __str__(self) -> str:
-        return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
+        return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}" \
+               "\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
 
     def __contains__(self, item):  # to short this checking in code
         return item.get_phone() in [phone.get_phone() for phone in self.phone_list]
@@ -157,7 +158,7 @@ class Record:
             return "Birthday field of this contact is empty: fill it!"
         self.birthday = new_birthday
         return f"Birthday has been changed successfully!"
-    
+
     def remove_birthday(self):
         if self.birthday is None:
             return "Birthday field of this contact is empty!"
@@ -194,12 +195,15 @@ class Record:
 
 
 class AddressBook(UserDict):
+    save_path = 'database/contacts_db'  # for auto-saving
+
     def __init__(self, pagination: int = 2) -> None:
         super().__init__()
         self.pagination = pagination
         self.current_index = 0
         self.current_page = 0  # for showing page number in terminal
         self.data: Dict[str, Record] = {}  # for excluding PyCharm error in def load
+        self.save_path = 'database/contacts_db'  # for saving address book
 
     def __iter__(self):
         return self
@@ -233,7 +237,7 @@ class AddressBook(UserDict):
     def remove_record(self, name: str):
         self.data.pop(name)
 
-    def save_to(self, filename: str = 'database/contacts_db') -> str:
+    def save_to(self, filename: str = save_path) -> str:
         path = Path(filename)
         path.mkdir(parents=True, exist_ok=True)
 
@@ -242,7 +246,7 @@ class AddressBook(UserDict):
         return f"Contacts have been saved to '{filename}' successfully!"
 
     @staticmethod
-    def load_from(filename: str = 'database/contacts_db'):
+    def load_from(filename: str = save_path) -> tuple:
         path = Path(filename)
         if not path.exists():
             return None, f"File '{filename}' does not exist!"
@@ -251,19 +255,6 @@ class AddressBook(UserDict):
             _ = AddressBook()
             _.data = db['contacts']
             return _.data, f"Contacts have been loaded from '{filename}' successfully!"
-
-    # Just for myself to remember
-
-    # def load(self, filename: str = 'database/contacts_db') -> str:
-    #     path = Path(filename)
-    #     if not path.exists():
-    #         return f"File '{filename}' does not exist!"
-    #
-    #     with shelve.open(filename) as db:
-    #         self.data = db['contacts']
-    #         # temporary hot-fix because otherwise PyCharm complains about type of db['contacts'] or
-    #         # noinspection PyTypeChecker
-    #     return f"Contacts have been loaded from '{filename}' successfully!"
 
     def find(self, search_string: str) -> str:
         result = ''

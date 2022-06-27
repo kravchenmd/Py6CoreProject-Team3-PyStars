@@ -10,6 +10,7 @@ from command_handling import handle_cmd
 def main():
     mode = None
     contacts = None
+    notes = None
 
     start_message = "*** Console bot project ***\n" \
                     "***  Team #3 - PyStars  ***\n"
@@ -43,6 +44,13 @@ def main():
     if mode == 'AddressBook':
         contacts = AddressBook()
         # TODO Load contacts from file
+        data, result = contacts.load_from()
+        if not (data is None):
+            contacts.data = data
+        print(result)
+
+    if mode == 'Note':
+        pass
 
     print("For help type `help` command")
 

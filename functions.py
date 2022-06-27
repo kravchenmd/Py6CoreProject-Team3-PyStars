@@ -242,6 +242,7 @@ def find_contacts(contacts: AddressBook, search_string: str) -> str:
     result = contacts.find(search_string)
     return result
 
+
 @func_arg_error
 def find_contact(contacts: AddressBook, search_string: str) -> str:
     result = contacts.find_contact(search_string)
