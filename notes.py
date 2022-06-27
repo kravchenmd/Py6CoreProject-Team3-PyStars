@@ -32,7 +32,7 @@ def input_error(func):
 
 
 @input_error
-def add_note(args: list):
+def add_note(notes, args: list):
     tags_list = []
     for word in args:
         if word.startswith("#"):
@@ -44,34 +44,34 @@ def add_note(args: list):
     return f'Note number {notes.data.index(note)} added successfully'
 
 
-def find_text(*args):
+def find_text(notes, *args):
     pass
 
 
-def edit_note(*args):
+def edit_note(notes, *args):
     pass
 
 
-def delete_note(*args):
+def delete_note(notes, *args):
     pass
 
 
-def add_tag(*args):
+def add_tag(notes, *args):
     pass
 
 
-def sort_by_tag(*args):
+def sort_by_tag(notes, *args):
     pass
 
 
-def show_notes(*args):
+def show_notes(notes, *args):
     res = ""
     for note in notes.data:
         res += '{:<4}'.format(notes.data.index(note)) + str(note) + "\n"
     return res
 
 
-def exit(*args):
+def exit(notes, *args):
     path = 'database/notes_db.bin'
     with open(path, 'wb') as file:
         pickle.dump(notes, file)
@@ -99,19 +99,21 @@ def processing(customer_input):
 
 
 def main1():
-    while True:
-        customer_input = input(">>>")
-        func, data = processing(customer_input)
-        print(func(data))
-        if func == exit:
-            break
-
-
-if __name__ == '__main__':
     path = 'database/notes_db.bin'
     if os.path.isfile(path):
         with open(path, 'rb') as file:
             notes = pickle.load(file)
     else:
         notes = Notes()
+
+    while True:
+        customer_input = input(">>>")
+        func, data = processing(customer_input)
+        print(func(notes, data))
+        if func == exit:
+            break
+
+
+if __name__ == '__main__':
+
     main1()
