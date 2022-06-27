@@ -61,7 +61,7 @@ def address_book_choose_command(cmd: list) -> tuple:
         case ['find', *args]:
             return f.find_contacts, args
         case ['help']:
-            return None, sorting_choose_command.__doc__
+            return None, address_book_choose_command.__doc__
         case _:  # '_' corresponds to the case when no match is found
             return None, "Unknown command!"
 
@@ -85,16 +85,17 @@ def sorting_choose_command(cmd: list) -> tuple:
 
 
 def parse_command(cmd: str) -> list:
+    # TODO попробовать lambda-функцию
     return cmd.strip().split(' ')  # apply strip() as well to exclude spaces at the ends
 
 
-def handle_cmd(cmd: str, contacts: Union[AddressBook, None], mode: str) -> tuple:
+def handle_cmd(cmd: str, arg: Union[AddressBook, None], mode: str) -> tuple:
     cmd = parse_command(cmd)
 
     if mode == 'AddressBook':
         func, result = address_book_choose_command(cmd)
         if func:
-            args = [contacts] + result if func not in (f.hello, f.exit_program) else result
+            args = [arg] + result if func not in (f.hello, f.exit_program) else result
             # else part to take into account hello() and show()
             result = func(*args)
 
@@ -102,5 +103,6 @@ def handle_cmd(cmd: str, contacts: Union[AddressBook, None], mode: str) -> tuple
         func, result = sorting_choose_command(cmd)
         if func:
             args = result
+            # TODO check for exit_program
             result = func(*args)
     return func, result
