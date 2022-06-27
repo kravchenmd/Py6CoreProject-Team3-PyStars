@@ -58,10 +58,12 @@ def address_book_choose_command(cmd: list) -> tuple:
             return f.save_contacts, cmd[1:]
         case ['load']:
             return f.load_contacts, cmd[1:]
-        case ['find', *args]:
+        case ['find', 'contacts', *args] | ['find_contacts', *args]:
             return f.find_contacts, args
         case ['help']:
             return None, address_book_choose_command.__doc__
+        case ['find', 'contact', *args] | ['find_contact', *args]:
+            return f.find_contact, args
         case _:  # '_' corresponds to the case when no match is found
             return None, "Unknown command!"
 

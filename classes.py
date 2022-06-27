@@ -292,9 +292,9 @@ class AddressBook(UserDict):
             else:
                 return f'In {input_day} days there is no birthday'
 
+    def find_contact(self, search_string: str) -> str:
 
+        for record in self.data.values():
 
-
-
-
-
+            if search_string.lower() == record.name.get_name().lower():
+                return f'Search results for: "{search_string}" \n{record}'
