@@ -287,10 +287,10 @@ class AddressBook(UserDict):
             m_b = m_b.replace(year=y)
             if b_day == m_b:
                 found += f'{record.name.get_name()}, '
-            if len(found) > 1:
-                return f'{found}has a birthday in this {input_day} days'
-            else:
-                return f'In {input_day} days there is no birthday'
+        if len(found) > 1:
+            return f'{found}has a birthday in this {input_day} days'
+        else:
+            return f'In {input_day} days there is no birthday'
 
     def find_contact(self, search_string: str) -> str:
 
