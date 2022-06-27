@@ -45,6 +45,7 @@ def add_note(notes, args: list):
     return f'Note number {notes.data.index(note)} added successfully'
 
 
+@input_error
 def find_text(notes, args: list):
     text = ' '.join(args)
     flag = 0
@@ -54,16 +55,32 @@ def find_text(notes, args: list):
             result += '{:<4}'.format(notes.data.index(note)) + str(note) + '\n'
             flag += 1
     if flag == 0:
-        result = f'There are no "{text}" symbols in your notes'
+        result = f'There are no "{text}" symbols in the notes'
     return result
 
 
+@input_error
 def edit_note(notes, *args):
-    pass
+    note_number = int(args[0][0])
+    new_text = ' '.join(args[0][1:])
+    if note_number < len(notes):
+        notes[note_number] = new_text
+        result = f'Note number {note_number} was changed'
+    else:
+        result = f'There is no note with number {note_number} in the notes'
+    return result
 
+@input_error
+def delete_note(notes, args):
+    note_number = int(args[0])
+    if note_number < len(notes):
+        note_to_delete = notes[note_number]
+        notes.pop(note_number)
+        result = f'Note {str(note_to_delete)} was deleted'
+    else:
+        result = f'There is no note with number {note_number} in the notes'
+    return result
 
-def delete_note(notes, *args):
-    pass
 
 
 def add_tag(notes, *args):
@@ -91,8 +108,8 @@ def exit(notes, *args):
 COMMANDS = {
     add_note: ("add",),
     find_text: ("find",),
-    edit_note: ("edit note",),
-    delete_note: ("delete note",),
+    edit_note: ("edit",),
+    delete_note: ("delete",),
     add_tag: ("add tag",),
     sort_by_tag: ("sort by tag",),
     exit: ("exit",),
