@@ -34,6 +34,7 @@ def input_error(func):
 @input_error
 def add_note(notes, args: list):
     tags_list = []
+    print(args)
     for word in args:
         if word.startswith("#"):
             tags_list.append(word)
@@ -44,8 +45,17 @@ def add_note(notes, args: list):
     return f'Note number {notes.data.index(note)} added successfully'
 
 
-def find_text(notes, *args):
-    pass
+def find_text(notes, args: list):
+    text = ' '.join(args)
+    flag = 0
+    result = ''
+    for note in notes:
+        if str(note).find(text) != -1:
+            result += '{:<4}'.format(notes.data.index(note)) + str(note) + '\n'
+            flag += 1
+    if flag == 0:
+        result = f'There are no "{text}" symbols in your notes'
+    return result
 
 
 def edit_note(notes, *args):
@@ -80,7 +90,7 @@ def exit(notes, *args):
 
 COMMANDS = {
     add_note: ("add",),
-    find_text: ("find text",),
+    find_text: ("find",),
     edit_note: ("edit note",),
     delete_note: ("delete note",),
     add_tag: ("add tag",),
