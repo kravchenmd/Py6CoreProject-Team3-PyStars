@@ -2,7 +2,7 @@
 import re
 import shelve
 from collections import UserDict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Union, Dict
 
@@ -272,3 +272,29 @@ class AddressBook(UserDict):
             if search_string.lower() in record.name.get_name().lower() or search_string in record.get_phones():
                 result += f"{record}"
         return result[:-1]  # remove last '\n'
+
+    def find_birthday(self, input_day):
+        found = ''
+        y = datetime.now()
+        y = y.year
+        current_date = datetime.now().date()
+        input_day = int(input_day)
+        b_day = timedelta(days=input_day) + current_date
+
+        for record in self.data.values():
+            i = record.get_birthday()
+            m_b = datetime.strptime(i, '%d.%m.%Y').date()
+            m_b = m_b.replace(year=y)
+            if b_day == m_b:
+                found += f'{record.name.get_name()}, '
+            if len(found) > 1:
+                return f'{found}has a birthday in this {input_day} days'
+            else:
+                return f'In {input_day} days there is no birthday'
+
+
+
+
+
+
+

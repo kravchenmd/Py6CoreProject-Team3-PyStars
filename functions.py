@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from classes import AddressBook, Phone, Birthday, Name, Email, Record, FieldException
 
 
@@ -201,6 +201,12 @@ def days_to_birthday(contacts: AddressBook, name: str) -> str:
         birthday = birthday.replace(year=now.year + 1)
     days = (birthday - now).days + 1
     return f"{days} day(s) to {contacts[name].name.get_name()}'s birthday!"
+
+
+@func_arg_error
+def birthday_in(contacts: AddressBook, input_day) -> str:
+    result = contacts.find_birthday(input_day)
+    return result
 
 
 @func_arg_error
