@@ -6,9 +6,9 @@ from collections import UserList
 
 class Note:
     # note takes 2 parameters: text (mandatory) and tag (not obligatory)
-    def __init__(self, text: str, tags: list = []):
+    def __init__(self, text: str, tags: list | None = None):
         self.text = text
-        self.tags = tags
+        self.tags = [] if tags is None else tags  # to exclude the issue with mutable objects
 
     def __str__(self):
         return " ".join(self.tags) + " " + self.text
@@ -70,6 +70,7 @@ def edit_note(notes, *args):
         result = f'There is no note with number {note_number} in the notes'
     return result
 
+
 @input_error
 def delete_note(notes, args):
     note_number = int(args[0])
@@ -80,7 +81,6 @@ def delete_note(notes, args):
     else:
         result = f'There is no note with number {note_number} in the notes'
     return result
-
 
 
 def add_tag(notes, *args):
@@ -98,6 +98,7 @@ def show_notes(notes, *args):
     return res
 
 
+# TODO change name of this function if we use it (`exit` is builtin function)
 def exit(notes, *args):
     path = 'database/notes_db.bin'
     with open(path, 'wb') as file:
