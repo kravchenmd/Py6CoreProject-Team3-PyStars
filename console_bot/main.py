@@ -1,4 +1,4 @@
-import keyboard  # msvcrt
+import keyboard
 import os
 import pickle
 import sys
