@@ -15,5 +15,5 @@ setup(
     ],
     packages=find_namespace_packages(),
     install_requires=['markdown'],
-    entry_points={'console_scripts': ['greeting=console_bot.main:main']}
+    entry_points={'console_scripts': ['console_bot=console_bot.main:main']}
 )
