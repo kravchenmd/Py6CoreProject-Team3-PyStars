@@ -17,10 +17,11 @@ from notes.notes import Notes
 
 def main():
     mode = None
-    contacts = None
+    # contacts = None
     notes = None
     arg = None  # argument to pass to `handle_cmd()` depending on the mode
     terminal_run = False  # for prompt_toolkit
+    command_completer = None
 
     # Check if program is running PyCharm or cmd, bash, etc. for prompt_toolkit
     shells = {"cmd.exe", "bash.exe", "powershell.exe", "WindowsTerminal.exe"}
