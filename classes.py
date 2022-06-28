@@ -110,7 +110,7 @@ class Record:
 
     def __str__(self) -> str:
         return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}" \
-               "\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
+               f"\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
 
     def __contains__(self, item):  # to short this checking in code
         return item.get_phone() in [phone.get_phone() for phone in self.phone_list]
