@@ -75,40 +75,38 @@ def address_book_choose_command(cmd: list) -> tuple:
 # TODO Finist commands and docstring
 def notes_choose_command(cmd: list) -> tuple:
     """
-    !!! In progress !!!
-    Commands for AddressBook mode:
-    - `close`, `exit`, `goodbye` - выход из программы
-    - `add` - добавление контакта в книгу. Количество аргументов может быть неполным. Например, 'add _name_' создаст контакт с пустыми полями номера телефона и даты рождения (при выводе заменяются '-'). Можно создать контакт только с именем и email, поставив 2 пробела после имени. Или же, например, с именем и датой рождения, поставив 3 пробела после имени (передавая пустые параметры для отсутствующих данных)
-    - `change phone` - изменение номера контакта. Пример: 'change _name_ _old_phone_ _new_phone_'
-    - `remove phone` - удаление телефона
-    - `show all`/`show_all` - вывести все контакты с пагинацией (по умолчанию 2)
-    - `edit birthday`/`edit_birthday` - изменить день рождения контакта
-    - `save`/`save_contacts` - сохранить контакты в файл, с использованием модуля `shelve`. По умолчанию сохранят в 'database/contacts.db'
-    - `load` - загрузить контакты из файла, с использованием модуля `shelve`. По умолчанию загружается из 'database/contacts.db'
-    - `find` - поиск контакта по имени или номеру телефона (ищет вхождения строки в этих полях)
+    Commands for Notes mode:
+    - `add` - добавление новой заметки в Notes
+    - `find` - поиск заметки по любому фрагменту (фрагмент заметки ввести через пробел) выводит все заметки, в которых найден указанный фрагмент
+    - `edit` - редактирование заметки (формат команды - через пробел - номер заметки - новый текст и тег заметки)
+    - `delete` - удаление заметки (необходимо внести порядковый номер заметки)
+    - `show` - вывести все заметки в формате: номер тег текст
+    - `new tag` - добавить тег к существующей заметке. Формат: номер заметки новый тег (с симоволом #)
+    - `sort` - сортировать заметки по тегам
+    - `exit` - выход из программы. Также, во время выхода Notes сохраняются в 'database/notes_db.bin'
     """
 
     match cmd:
-        case ['close'] | ['exit'] | ['goodbye']:
-            return f.exit_program, []
-        case ['add', 'note', *args] | ['add_note', *args]:
+        case['add', *args]:
             return n.add_note, args
-        case ['delete', 'note', *args] | ['delete_note', *args]:
-            return n.delete_note, args
-        case ['edit', 'note', *args] | ['edit_note', *args]:
-            return n.edit_note, args
-        case ['show', 'notes'] | ['show_notes']:
-            return n.show_notes, []
-        # case ['save']:
-        #     return n.save_notes, cmd[1:]
-        # case ['load']:
-        #     return n.load_notes, cmd[1:]
-        case ['find', 'text', *args] | ['find_text', *args]:
+        case ['find', *args]:
             return n.find_text, args
+        case ['edit', *args]:
+            return n.edit_note, args
+        case ['delete', *args]:
+            return n.delete_note, args
+        case ['new', 'tag', *args]:
+            return n.new_tag, args
+        case ['sort', 'by', 'tag', *args]:
+            return n.sort_by_tag, []
+        case['exit', *args]:
+            return n.exit_notes, []
+        case['show', *args]:
+            return n.show_notes, []
         case ['help']:
-            return None, notes_choose_command.__doc__
+            return n.help_notes, notes_choose_command.__doc__
         case _:  # '_' corresponds to the case when no match is found
-            return None, "Unknown command!"
+            return n.unknown, "Unknown command! For help type `help`"
 
 
 # TODO Finist commands and docstring
@@ -144,7 +142,7 @@ def handle_cmd(cmd: str, arg: Union[AddressBook, Notes, None], mode: str) -> tup
             return None, "ERROR: Unknown mode!"
 
     func, result = choose_command(cmd)
-    if func:
+    if func and mode != 'Notes':
         args = [arg] + result if func not in (f.hello, f.exit_program) else result
         # else part to take into account hello() and show()
         result = func(*args)

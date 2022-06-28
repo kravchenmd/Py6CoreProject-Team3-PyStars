@@ -1,9 +1,13 @@
 import msvcrt
+import os
+import pickle
 import sys
 import time
 
 import functions as f
+import notes as n
 from classes import AddressBook
+from notes import Notes, Note
 from command_handling import handle_cmd
 
 
@@ -54,11 +58,16 @@ def main():
     # TODO Larisa: Initialization of Notes
     # Просто пледложение по аналогии с AddressBook. Можно попробовать сделать по-другому
     if mode == 'Notes':
-        # notes = Notes()
-        # arg = notes
-        pass
+        path = 'database/notes_db.bin'
+        if os.path.isfile(path):
+            with open(path, 'rb') as file:
+                notes = pickle.load(file)
+            print(f"Notes have been loaded from '{path}' successfully!")
+        else:
+            notes = Notes()
+        arg = notes
 
-    print("\nNOTE: For help type `help` command")
+    print("\nNOTES: For help type `help` command")
 
     while True:
         command = None
@@ -67,9 +76,12 @@ def main():
             command = input('Enter command: ')
 
         func, result = handle_cmd(command, arg, mode)
-        print(result)
+        if mode == 'Notes':
+            print(func(notes, result))
+        else:
+            print(result)
 
-        if func == f.exit_program:
+        if func == f.exit_program or func == n.exit_notes:
             break
         print()
 
