@@ -1,4 +1,4 @@
-import msvcrt
+import keyboard  # msvcrt
 import os
 import pickle
 import sys
@@ -30,44 +30,41 @@ def main():
     print(start_message)
 
     while not mode:
-        if msvcrt.kbhit():  # if key is pressed
-            key_code = ord(msvcrt.getche())  # get ASCII code of pressed key0
-            match key_code:
-                case 48:  # 0 - Exit
-                    print("\nGoodbye!")
-                    sys.exit()  # exit program (to prevent going to the next while)
-                case 49:  # 1 - Address book
-                    mode = 'AddressBook'
-                    print("\nAddress book mode")
-                case 50:  # 2 - Note
-                    mode = 'Notes'
-                    print("\nNotes mode")
-                case 51:  # 3 - Sorting
-                    mode = 'Sorting'
-                    print("\nSorting mode")
+        if keyboard.is_pressed('Esc'):
+            print("\nGoodbye!")
+            sys.exit()  # exit program (to prevent going to the next while)
+        if keyboard.is_pressed('1'):
+            mode = 'AddressBook'
+            contacts = AddressBook()
+            arg = contacts
 
-    if mode == 'AddressBook':
-        contacts = AddressBook()
-        arg = contacts
-        # Load contacts from file
-        data, result = contacts.load_from()
-        if not (data is None):
-            contacts.data = data
-        print(result)
+            # Load contacts from file
+            data, result = contacts.load_from()
+            if not (data is None):
+                contacts.data = data
+            print(f"\n{result}")
 
-    # TODO Larisa: Initialization of Notes
-    # Просто пледложение по аналогии с AddressBook. Можно попробовать сделать по-другому
-    if mode == 'Notes':
-        path = 'database/notes_db.bin'
-        if os.path.isfile(path):
-            with open(path, 'rb') as file:
-                notes = pickle.load(file)
-            print(f"Notes have been loaded from '{path}' successfully!")
-        else:
-            notes = Notes()
-        arg = notes
+            print("\nMode: Address book")
 
-    print("\n***For help type `help` command**\n")
+        if keyboard.is_pressed('2'):
+            mode = 'Notes'
+
+            path = 'database/notes_db.bin'
+            if os.path.isfile(path):
+                with open(path, 'rb') as file:
+                    notes = pickle.load(file)
+                print(f"\nNotes have been loaded from '{path}' successfully!")
+            else:
+                notes = Notes()
+            arg = notes
+
+            print("\nMode: Notes")
+
+        if keyboard.is_pressed('3'):
+            mode = 'Sorting'
+            print("\nMode: Sorting")
+
+    print("***For help type `help` command**\n")
 
     while True:
         command = None
