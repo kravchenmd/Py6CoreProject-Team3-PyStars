@@ -22,10 +22,10 @@ def main():
     print(start_message)
     time.sleep(1)
     start_message = "Modes of the bot:\n" \
-                    "\t0. Exit\n" \
-                    "\t1. Address book mode\n" \
-                    "\t2. Note mode\n" \
-                    "\t3. Sorting of a folder\n" \
+                    "\tEsc - Exit\n" \
+                    "\t1   - Address book mode\n" \
+                    "\t2   - Note mode\n" \
+                    "\t3   - Sorting of a folder\n" \
                     "Press needed number..."
     print(start_message)
 
