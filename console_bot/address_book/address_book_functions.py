@@ -226,13 +226,13 @@ def exit_program():
 
 
 @func_arg_error
-def save_contacts(contacts: AddressBook, filename: str = 'database/contacts_db') -> str:
+def save_contacts(contacts: AddressBook, filename: str = '') -> str:
     result = contacts.save_to(filename)
     return result
 
 
 @func_arg_error
-def load_contacts(contacts: AddressBook, filename: str = 'database/contacts_db') -> str:
+def load_contacts(contacts: AddressBook, filename: str = '') -> str:
     data, result = contacts.load_from(filename)
     if not (data is None):
         contacts.data = data
