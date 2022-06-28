@@ -7,26 +7,26 @@ from console_bot.sorting.sort import sort_folder
 from console_bot.notes import notes as n
 
 
-# TODO Finist docstring
 def address_book_choose_command(cmd: list) -> tuple:
     """
-    !!! In progress !!!
     Commands for AddressBook mode:
     - `close`, `exit`, `goodbye` - выход из программы
     - `hello` - выводит приветствие
-    - `add` - добавление контакта в книгу. Количество аргументов может быть неполным. Например, 'add _name_' создаст контакт с пустыми полями номера телефона и даты рождения (при выводе заменяются '-'). Можно создать контакт только с именем и email, поставив 2 пробела после имени. Или же, например, с именем и датой рождения, поставив 3 пробела после имени (передавая пустые параметры для отсутствующих данных)
-    - `change phone` - изменение номера контакта. Пример: 'change _name_ _old_phone_ _new_phone_'
-    - `remove phone` - удаление телефона
-    - `change email` - изменение email. Пример: 'change _name_ _old_email_ _new_email_'
-    - `remove email` - удаление email
-    - `phone` - показать номер контакта по имени
-    - `email` - показать email по имени
-    - `show all`/`show_all` - вывести все контакты с пагинацией (по умолчанию 2)
-    - `edit birthday`/`edit_birthday` - изменить день рождения контакта
-    - `days to birthday`/`days_to_birthday` - сколько дней до дня рождения контакта
-    - `save`/`save_contacts` - сохранить контакты в файл, с использованием модуля `shelve`. По умолчанию сохранят в 'database/contacts.db'
-    - `load` - загрузить контакты из файла, с использованием модуля `shelve`. По умолчанию загружается из 'database/contacts.db'
-    - `find` - поиск контакта по имени или номеру телефона (ищет вхождения строки в этих полях)
+    - `add contact`, `add_contact` - добавление контакта в книгу
+    - `remove contact`, `remove_contact` - удаление контакта из книги
+    - `change phone`, `change_phone` - изменение номера контакта
+    - `remove phone`, `remove_phone` - удаление телефона
+    - `show email`, `show_email` - показать email по имени
+    - `change email`, `change_email` - изменение email. Пример: 'change _name_ _old_email_ _new_email_'
+    - `remove email`, `remove_email` - удаление email
+    - `phones`, `show phones`, `show_phones` - показать номера контакта по имени
+    - `show all`, `show_all` - вывести все контакты с пагинацией (по умолчанию 2)
+    - `edit birthday`, `edit_birthday` - изменить день рождения контакта
+    - `days to birthday`, `days_to_birthday` - сколько дней до дня рождения контакта
+    - 'birthday in', `birthday_in` - вывести список контактов, у которых ДР через заданное кол-во дней
+    - `save`, `save_contacts` - сохранить контакты в файл, с использованием модуля `shelve`.
+    - `load` - загрузить контакты из файла, с использованием модуля `shelve`.
+    - `find contact`, `find_contact` - поиск контакта по имени или номеру телефона (ищет вхождения строки в этих полях)
     """
 
     match cmd:
@@ -52,10 +52,12 @@ def address_book_choose_command(cmd: list) -> tuple:
             return f.remove_birthday, args
         case ['days', 'to', 'birthday', *args] | ['days_to_birthday', *args]:
             return f.days_to_birthday, args
-        case ['change', 'email', *args]:
+        case ['change', 'email', *args] | ['change_email', *args]:
             return f.edit_email, args
         case ['remove', 'email', *args]:
             return f.remove_email, args
+        case ['show', 'email', *args] | ['show_email', *args]:
+            return f.show_email, args
         case ['birthday', 'in', *args] | ['birthday in', *args]:
             return f.birthday_in, args
         case ['save']:
@@ -109,10 +111,8 @@ def notes_choose_command(cmd: list) -> tuple:
             return n.unknown, "Unknown command! For help type `help`"
 
 
-# TODO Finist commands and docstring
 def sorting_choose_command(cmd: list) -> tuple:
     """
-    !!! In progress !!!
     Commands for sorting mode:
     - 'close', 'exit', 'goodbye' - exit the program
     - 'sort folder _path_', 'sort_folder _path_': sort the contacts by name
