@@ -203,7 +203,6 @@ class AddressBook(UserDict):
         self.current_index = 0
         self.current_page = 0  # for showing page number in terminal
         self.data: Dict[str, Record] = {}  # for excluding PyCharm error in def load
-        self.save_path = './console_bot/database/contacts_db'  # for auto-saving
 
     def __iter__(self):
         return self
@@ -238,9 +237,6 @@ class AddressBook(UserDict):
         self.data.pop(name)
 
     def save_to(self, filename: str = save_path) -> str:
-        if filename == '':
-            filename = save_path  # for auto-saving
-
         path = Path(filename)
         path.mkdir(parents=True, exist_ok=True)
 
@@ -250,7 +246,6 @@ class AddressBook(UserDict):
 
     @staticmethod
     def load_from(filename: str = save_path) -> tuple:
-
         path = Path(filename)
         if not path.exists():
             return None, f"File '{filename}' does not exist!"
