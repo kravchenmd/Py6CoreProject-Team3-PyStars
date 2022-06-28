@@ -67,7 +67,7 @@ def main():
             notes = Notes()
         arg = notes
 
-    print("\nNOTES: For help type `help` command")
+    print("\n***For help type `help` command**\n")
 
     while True:
         command = None
