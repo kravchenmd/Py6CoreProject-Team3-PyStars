@@ -110,7 +110,7 @@ class Record:
 
     def __str__(self) -> str:
         return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}" \
-               "\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
+               f"\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
 
     def __contains__(self, item):  # to short this checking in code
         return item.get_phone() in [phone.get_phone() for phone in self.phone_list]
@@ -195,7 +195,7 @@ class Record:
 
 
 class AddressBook(UserDict):
-    save_path = 'database/contacts_db'  # for auto-saving
+    save_path = './console_bot/database/contacts_db'  # for auto-saving
 
     def __init__(self, pagination: int = 2) -> None:
         super().__init__()
@@ -203,7 +203,6 @@ class AddressBook(UserDict):
         self.current_index = 0
         self.current_page = 0  # for showing page number in terminal
         self.data: Dict[str, Record] = {}  # for excluding PyCharm error in def load
-        self.save_path = 'database/contacts_db'  # for saving address book
 
     def __iter__(self):
         return self

@@ -57,6 +57,8 @@ def find_text(notes, args: list):
     return result
 
 
+# TODO 1 (Lara): change signature to `def edit_note(notes, note_number, *args)`
+# to exclude args with two indexes (args[0][0])
 @input_error
 def edit_note(notes, *args):
     note_number = int(args[0][0])
@@ -76,6 +78,7 @@ def edit_note(notes, *args):
     return result
 
 
+# TODO 2 (Lara): check signature (`args` or `*args`? Just not sure...)
 @input_error
 def delete_note(notes, args):
     note_number = int(args[0])
@@ -88,6 +91,7 @@ def delete_note(notes, args):
     return result
 
 
+# TODO 3 (Lara): change signature, see TODO 1
 def new_tag(notes, *args):
     note_number = int(args[0][0])
     tag = args[0][1]
@@ -111,16 +115,19 @@ def show_notes(notes, *args):
 
 
 def exit_notes(notes, *args):
-    path = 'database/notes_db.bin'
+    path = '../database/notes_db.bin'
     with open(path, 'wb') as file:
         pickle.dump(notes, file)
     return f'Your notes saved in file {path}. Good bye!'
 
 
+# TODO 4 (Lara): revise if this function is really needed
+# Maybe it is better just to return in command_handle `None` value and docstring...
 def help_notes(notes, *args):
     return args[0]
 
 
+# TODO 5 (Lara): the same as TODO 4
 def unknown(notes, *args):
     return args[0]
 

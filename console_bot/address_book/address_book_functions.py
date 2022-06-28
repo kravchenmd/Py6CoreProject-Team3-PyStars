@@ -1,5 +1,7 @@
-from datetime import datetime, timedelta
-from classes import AddressBook, Phone, Birthday, Name, Email, Record, FieldException
+from datetime import datetime
+
+from console_bot.address_book.address_book_class import AddressBook, Phone, Birthday, Name, Email, Record, \
+    FieldException
 
 
 # This decorator handles the correct number of arguments that are passed into the function
@@ -13,8 +15,8 @@ def func_arg_error(func):
             if f_name in ('exit_program', 'hello', 'show_all_phones'):
                 return "ERROR: This command has to be written without arguments!"
             if f_name in ('show_phone', 'days_to_birthday', 'find_contacts'):
-                return "ERROR: This command needs 1 arguments: "\
-                        f"'{'search_word' if f_name == 'find_contacts' else 'name'}' separated by 1 space! "
+                return "ERROR: This command needs 1 arguments: " \
+                       f"'{'search_word' if f_name == 'find_contacts' else 'name'}' separated by 1 space! "
             if f_name in ('add_contact',):
                 return "ERROR: This command needs 1 obligatory argument 'name' and 3 supplementary " \
                        "'phone', 'email' and 'birthday' separated by 1 space!"
@@ -81,7 +83,7 @@ def add_contact(contacts: AddressBook, name: str, phone: str = '', email: str = 
 def remove_contact(contacts: AddressBook, name: str) -> str:
     if name not in contacts.data.keys():
         return "ERROR: There is no contact with this name!"
-    
+
     contacts.remove_record(name)
     return f"Contact {name} has been removed successfully!"
 
@@ -115,7 +117,7 @@ def edit_email(contacts: AddressBook, name: str, email: str, new_email: str) -> 
     result = contacts.data.get(name).edit_email(old_e, new_e)
     return result
 
-  
+
 @func_arg_error
 def change_birthday(contacts: AddressBook, name: str, new_birthday: str) -> str:
     if name not in contacts.data.keys():
@@ -224,13 +226,13 @@ def exit_program():
 
 
 @func_arg_error
-def save_contacts(contacts: AddressBook, filename: str = 'database/contacts_db') -> str:
+def save_contacts(contacts: AddressBook, filename: str = AddressBook.save_path) -> str:
     result = contacts.save_to(filename)
     return result
 
 
 @func_arg_error
-def load_contacts(contacts: AddressBook, filename: str = 'database/contacts_db') -> str:
+def load_contacts(contacts: AddressBook, filename: str = AddressBook.save_path) -> str:
     data, result = contacts.load_from(filename)
     if not (data is None):
         contacts.data = data
