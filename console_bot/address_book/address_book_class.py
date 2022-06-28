@@ -195,7 +195,7 @@ class Record:
 
 
 class AddressBook(UserDict):
-    save_path = 'database/contacts_db'  # for auto-saving
+    save_path = '../database/contacts_db'  # for auto-saving
 
     def __init__(self, pagination: int = 2) -> None:
         super().__init__()
@@ -203,7 +203,7 @@ class AddressBook(UserDict):
         self.current_index = 0
         self.current_page = 0  # for showing page number in terminal
         self.data: Dict[str, Record] = {}  # for excluding PyCharm error in def load
-        self.save_path = 'database/contacts_db'  # for saving address book
+        self.save_path = '../database/contacts_db'  # for saving address book
 
     def __iter__(self):
         return self

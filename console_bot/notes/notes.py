@@ -115,7 +115,7 @@ def show_notes(notes, *args):
 
 
 def exit_notes(notes, *args):
-    path = 'database/notes_db.bin'
+    path = '../database/notes_db.bin'
     with open(path, 'wb') as file:
         pickle.dump(notes, file)
     return f'Your notes saved in file {path}. Good bye!'
