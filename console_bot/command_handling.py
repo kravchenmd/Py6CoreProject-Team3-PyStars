@@ -1,10 +1,10 @@
 from typing import Union
 
-from console_bot.address_book import address_book_functions as f
-from console_bot.address_book.address_book_class import AddressBook
-from console_bot.notes.notes import Notes
-from console_bot.sorting.sort import sort_folder
-from console_bot.notes import notes as n
+from address_book import address_book_functions as f
+from address_book.address_book_class import AddressBook
+from notes.notes import Notes
+from sorting.sort import sort_folder
+from notes import notes as n
 
 
 def address_book_choose_command(cmd: list) -> tuple:

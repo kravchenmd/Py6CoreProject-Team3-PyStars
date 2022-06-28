@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from console_bot.address_book.address_book_class import AddressBook, Phone, Birthday, Name, Email, Record, \
+from .address_book_class import AddressBook, Phone, Birthday, Name, Email, Record, \
     FieldException
 
 
