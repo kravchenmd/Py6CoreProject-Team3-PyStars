@@ -15,10 +15,9 @@ class Note:
 
 
 class Notes(UserList):
-    count = 0
 
     def add(self, note: Note):
-        self.data[self.count] = note
+        self.data.append(note)
 
 
 def input_error(func):
@@ -34,7 +33,6 @@ def input_error(func):
 @input_error
 def add_note(notes, args: list):
     tags_list = []
-    print(args)
     for word in args:
         if word.startswith("#"):
             tags_list.append(word)
@@ -62,9 +60,16 @@ def find_text(notes, args: list):
 @input_error
 def edit_note(notes, *args):
     note_number = int(args[0][0])
-    new_text = ' '.join(args[0][1:])
+    words_list = args[0][1:]
+    tags_list = []
+    for word in words_list:
+        if word.startswith("#"):
+            tags_list.append(word)
+            words_list.remove(word)
+    text = ' '.join(words_list)
+    note = Note(text, tags_list)
     if note_number < len(notes):
-        notes[note_number] = new_text
+        notes[note_number] = note
         result = f'Note number {note_number} was changed'
     else:
         result = f'There is no note with number {note_number} in the notes'
@@ -83,8 +88,15 @@ def delete_note(notes, args):
     return result
 
 
-def add_tag(notes, *args):
-    pass
+def new_tag(notes, *args):
+    note_number = int(args[0][0])
+    tag = args[0][1]
+    if note_number < len(notes):
+        notes.data[note_number].tags.append(tag)
+        result = f'Tag {tag} was added to note {note_number}'
+    else:
+        result = f'There is no note with number {note_number}'
+    return result
 
 
 def sort_by_tag(notes, *args):
@@ -94,54 +106,61 @@ def sort_by_tag(notes, *args):
 def show_notes(notes, *args):
     res = ""
     for note in notes.data:
-        res += '{:<4}'.format(notes.data.index(note)) + str(note) + "\n"
+        res += '\t' + '{:<4}'.format(notes.data.index(note)) + str(note) + "\n"
     return res
 
 
-# TODO change name of this function if we use it (`exit` is builtin function)
-def exit(notes, *args):
+def exit_notes(notes, *args):
     path = 'database/notes_db.bin'
     with open(path, 'wb') as file:
         pickle.dump(notes, file)
     return f'Your notes saved in file {path}. Good bye!'
 
 
-COMMANDS = {
-    add_note: ("add",),
-    find_text: ("find",),
-    edit_note: ("edit",),
-    delete_note: ("delete",),
-    add_tag: ("add tag",),
-    sort_by_tag: ("sort by tag",),
-    exit: ("exit",),
-    show_notes: ("show",),
-}
+def help_notes(notes, *args):
+    return args[0]
 
 
-def processing(customer_input):
-    for k in COMMANDS:
-        for command in COMMANDS[k]:
-            if customer_input.lower().strip().startswith(command):
-                list_of_data = customer_input[len(command):].strip().split(" ")
-                return k, list_of_data
+def unknown(notes, *args):
+    return args[0]
 
 
-def main1():
-    path = 'database/notes_db.bin'
-    if os.path.isfile(path):
-        with open(path, 'rb') as file:
-            notes = pickle.load(file)
-    else:
-        notes = Notes()
-
-    while True:
-        customer_input = input(">>>")
-        func, data = processing(customer_input)
-        print(func(notes, data))
-        if func == exit:
-            break
-
-
-if __name__ == '__main__':
-
-    main1()
+# COMMANDS = {
+#     add_note: ("add",),
+#     find_text: ("find",),
+#     edit_note: ("edit",),
+#     delete_note: ("delete",),
+#     add_tag: ("add tag",),
+#     sort_by_tag: ("sort by tag",),
+#     exit_notes: ("exit",),
+#     show_notes: ("show",),
+# }
+#
+#
+# def processing(customer_input):
+#     for k in COMMANDS:
+#         for command in COMMANDS[k]:
+#             if customer_input.lower().strip().startswith(command):
+#                 list_of_data = customer_input[len(command):].strip().split(" ")
+#                 return k, list_of_data
+#
+#
+# def main1():
+#     path = 'database/notes_db.bin'
+#     if os.path.isfile(path):
+#         with open(path, 'rb') as file:
+#             notes = pickle.load(file)
+#     else:
+#         notes = Notes()
+#
+#     while True:
+#         customer_input = input(">>>")
+#         func, data = processing(customer_input)
+#         print(func(notes, data))
+#         if func == exit:
+#             break
+#
+#
+# if __name__ == '__main__':
+#
+#     main1()
