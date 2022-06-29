@@ -8,11 +8,20 @@ import psutil
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
-from console_bot.address_book import address_book_functions as f
-from console_bot.notes import notes as n
-from console_bot.address_book.address_book_class import AddressBook
-from console_bot.notes.notes import Notes
-from console_bot.command_handling import handle_cmd
+
+if os.path.dirname(os.path.dirname(os.path.abspath(__file__))) not in sys.path:
+    from address_book import address_book_functions as f
+    from notes import notes as n
+    from address_book.address_book_class import AddressBook
+    from notes.notes import Notes
+    from command_handling import handle_cmd
+else:
+    from console_bot.address_book import address_book_functions as f
+    from console_bot.notes import notes as n
+    from console_bot.address_book.address_book_class import AddressBook
+    from console_bot.notes.notes import Notes
+    from console_bot.command_handling import handle_cmd
+
 
 def main():
     mode = None
@@ -68,7 +77,7 @@ def main():
             input()
             mode = 'Notes'
 
-            path = '../database/notes_db.bin'
+            path = './database/notes_db.bin'
             if os.path.isfile(path):
                 with open(path, 'rb') as file:
                     notes = pickle.load(file)

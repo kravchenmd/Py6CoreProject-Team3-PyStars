@@ -1,6 +1,7 @@
-from pathlib import Path
 import shutil
 import sys
+from pathlib import Path
+
 from . import file_parser as parser
 from .normalize import normalize
 
