@@ -21,6 +21,7 @@ def address_book_choose_command(cmd: list) -> tuple:
     Commands for AddressBook mode:
     - `close`, `exit`, `goodbye` - выход из программы
     - `hello` - выводит приветствие
+    - 'back' - return to the main menu
     - `add contact`, `add_contact` - добавление контакта в книгу
     - `remove contact`, `remove_contact` - удаление контакта из книги
     - `change phone`, `change_phone` - изменение номера контакта
@@ -43,6 +44,8 @@ def address_book_choose_command(cmd: list) -> tuple:
             return f.exit_program, []
         case ['hello']:
             return f.hello, cmd[1:]
+        case ['back']:
+            return f.back, []
         case ['add', 'contact', *args] | ['add_contact', *args]:  # *args is a list of all the arguments after 'add'
             return f.add_contact, args
         case ['remove', 'contact', *args] | ['remove_contact', *args]:
@@ -94,6 +97,7 @@ def notes_choose_command(cmd: list) -> tuple:
     - `show` - вывести все заметки в формате: номер тег текст
     - `new tag` - добавить тег к существующей заметке. Формат: номер заметки новый тег (с симоволом #)
     - `sort by tag` - сортировать заметки по тегам
+    - 'back' - return to the main menu, повернутися в головне меню
     - `exit` - выход из программы. Также, во время выхода Notes сохраняются в 'database/notes_db.bin'
     """
 
@@ -114,6 +118,8 @@ def notes_choose_command(cmd: list) -> tuple:
             return n.exit_notes, []
         case['show', *args]:
             return n.show_notes, []
+        case ['back']:
+            return f.back, []
         case ['help']:
             return n.help_notes, notes_choose_command.__doc__
         case _:  # '_' corresponds to the case when no match is found
@@ -125,12 +131,15 @@ def sorting_choose_command(cmd: list) -> tuple:
     Commands for sorting mode:
     - 'close', 'exit', 'goodbye' - exit the program
     - 'sort folder _path_', 'sort_folder _path_': sort the contacts by name
+    - 'back': return to the main menu
     """
     match cmd:
         case ['close'] | ['exit'] | ['goodbye']:
             return f.exit_program, []
         case ['help']:
             return None, sorting_choose_command.__doc__
+        case ['back']:
+            return f.back, []
         case ['sort', 'folder', *args] | ['sort_folder', *args]:
             return sort_folder, args
         case _:
@@ -152,7 +161,7 @@ def handle_cmd(cmd: str, arg: Union[AddressBook, Notes, None], mode: str) -> tup
 
     func, result = choose_command(cmd)
     if func and mode != 'Notes':
-        args = [arg] + result if func not in (f.hello, f.exit_program) else result
+        args = [arg] + result if func not in (f.hello, f.exit_program, f.back) else result
         # else part to take into account hello() and show()
         result = func(*args)
 

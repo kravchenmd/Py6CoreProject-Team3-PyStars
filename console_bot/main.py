@@ -89,7 +89,7 @@ def main():
             print("\nMode: Notes")
             if terminal_run:
                 command_completer = WordCompleter(
-                    ['help', 'exit', 'hello', 'add', 'find', 'edit', 'delete',
+                    ['help', 'exit', 'back', 'hello', 'add', 'find', 'edit', 'delete',
                      'show', 'new tag', 'sort by tag'])
 
         if keyboard.is_pressed('3'):
@@ -99,7 +99,7 @@ def main():
 
             if terminal_run:
                 command_completer = WordCompleter(
-                    ['help', 'close', 'exit', 'goodbye', 'sort_folder'])
+                    ['help', 'back', 'close', 'exit', 'goodbye', 'sort_folder'])
 
     print("***For help type `help` command**\n")
 
@@ -121,6 +121,8 @@ def main():
 
         if func == f.exit_program or func == n.exit_notes:
             break
+        elif func == f.back:
+            main()
         print()
 
 
