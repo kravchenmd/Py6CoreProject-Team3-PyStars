@@ -52,7 +52,7 @@ def add_note(notes, args: list):
     text = ' '.join(args)
     note = Note(text, tags_list)
     notes.data.append(note)
-    return f'Note number {notes.data.index(note)} added successfully'
+    return f'Note number {notes.data.index(note)+1} added successfully'
 
 
 @input_error
@@ -62,7 +62,7 @@ def find_text(notes, args: list):
     result = ''
     for note in notes:
         if str(note).find(text) != -1:
-            result += '{:<4}'.format(notes.data.index(note)) + str(note) + '\n'
+            result += '{:<4}'.format(notes.data.index(note)+1) + str(note) + '\n'
             flag += 1
     if flag == 0:
         result = f'There are no "{text}" symbols in the notes'
@@ -74,7 +74,7 @@ def find_text(notes, args: list):
 # Lara: the issue is function can take only 2 arguments, not 3. And the second one is list
 @input_error
 def edit_note(notes, *args):
-    note_number = int(args[0][0])
+    note_number = int(args[0][0])-1
     words_list = args[0][1:]
     tags_list = []
     for word in words_list:
@@ -85,35 +85,35 @@ def edit_note(notes, *args):
     note = Note(text, tags_list)
     if note_number < len(notes):
         notes[note_number] = note
-        result = f'Note number {note_number} was changed'
+        result = f'Note number {note_number+1} was changed'
     else:
-        result = f'There is no note with number {note_number} in the notes'
+        result = f'There is no note with number {note_number+1} in the notes'
     return result
 
 
 # TODO 2 (Lara): check signature (`args` or `*args`? Just not sure...)
 @input_error
 def delete_note(notes, args):
-    note_number = int(args[0])
+    note_number = int(args[0])-1
     if note_number < len(notes):
         note_to_delete = notes[note_number]
         notes.pop(note_number)
-        result = f'Note {str(note_to_delete)} was deleted'
+        result = f'Note "{str(note_to_delete)}" was deleted'
     else:
-        result = f'There is no note with number {note_number} in the notes'
+        result = f'There is no note with number {note_number+1} in the notes'
     return result
 
 
 # TODO 3 (Lara): change signature, see TODO 1
 @input_error
 def new_tag(notes, *args):
-    note_number = int(args[0][0])
+    note_number = int(args[0][0])-1
     tag = args[0][1]
     if note_number < len(notes):
         notes.data[note_number].tags.append(tag)
-        result = f'Tag {tag} was added to note {note_number}'
+        result = f'Tag {tag} was added to note {note_number+1}'
     else:
-        result = f'There is no note with number {note_number}'
+        result = f'There is no note with number {note_number+1}'
     return result
 
 
@@ -136,7 +136,7 @@ def sort_by_tag(notes, *args):
 def show_notes(notes, *args):
     res = ""
     for note in notes.data:
-        res += '\t' + '{:<4}'.format(notes.data.index(note)) + str(note) + '\n'
+        res += '\t' + '{:<4}'.format(notes.data.index(note)+1) + str(note) + '\n'
     return res
 
 
