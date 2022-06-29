@@ -109,8 +109,12 @@ class Record:
         self.birthday: Union[Birthday, None] = None
 
     def __str__(self) -> str:
-        return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}" \
-               f"\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
+        # return f"{self.name.get_name() : <15}:\t{self.get_phones() : ^13}" \
+        #        f"\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
+        return '{:<15}: '.format('Name') + f'\t{self.name.get_name()}\n' +\
+               '{:>15}: '.format('phones') + f'\t{self.get_phones()}\n' +\
+               '{:>15}: '.format('emails') + f'\t{self.get_emails()}\n' +\
+               '{:>15}: '.format('birthday') + f'\t{self.get_birthday()}\n\n'\
 
     def __contains__(self, item):  # to short this checking in code
         return item.get_phone() in [phone.get_phone() for phone in self.phone_list]
