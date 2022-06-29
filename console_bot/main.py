@@ -87,6 +87,10 @@ def main():
             arg = notes
 
             print("\nMode: Notes")
+            if terminal_run:
+                command_completer = WordCompleter(
+                    ['help', 'exit', 'hello', 'add', 'find', 'edit', 'delete',
+                     'show', 'new tag', 'sort by tag'])
 
         if keyboard.is_pressed('3'):
             input()

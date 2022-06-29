@@ -9,7 +9,7 @@ class Note:
     def __init__(self, text: str, tags: list | None = None):
         self.text = text
         self.tags = [] if tags is None else tags  # to exclude the issue with mutable objects
-        self.tags.sort() #to store sorted tags
+        self.tags.sort() # to store sorted tags
 
     def __str__(self):
         return " ".join(self.tags) + " " + self.text
@@ -105,6 +105,7 @@ def delete_note(notes, args):
 
 
 # TODO 3 (Lara): change signature, see TODO 1
+@input_error
 def new_tag(notes, *args):
     note_number = int(args[0][0])
     tag = args[0][1]
@@ -155,44 +156,3 @@ def help_notes(notes, *args):
 # TODO 5 (Lara): the same as TODO 4
 def unknown(notes, *args):
     return args[0]
-
-
-# COMMANDS = {
-#     add_note: ("add",),
-#     find_text: ("find",),
-#     edit_note: ("edit",),
-#     delete_note: ("delete",),
-#     add_tag: ("add tag",),
-#     sort_by_tag: ("sort by tag",),
-#     exit_notes: ("exit",),
-#     show_notes: ("show",),
-# }
-#
-#
-# def processing(customer_input):
-#     for k in COMMANDS:
-#         for command in COMMANDS[k]:
-#             if customer_input.lower().strip().startswith(command):
-#                 list_of_data = customer_input[len(command):].strip().split(" ")
-#                 return k, list_of_data
-#
-#
-# def main1():
-#     path = 'database/notes_db.bin'
-#     if os.path.isfile(path):
-#         with open(path, 'rb') as file:
-#             notes = pickle.load(file)
-#     else:
-#         notes = Notes()
-#
-#     while True:
-#         customer_input = input(">>>")
-#         func, data = processing(customer_input)
-#         print(func(notes, data))
-#         if func == exit:
-#             break
-#
-#
-# if __name__ == '__main__':
-#
-#     main1()
