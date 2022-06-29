@@ -14,17 +14,22 @@ def func_arg_error(func):
             f_name = func.__name__
             if f_name in ('exit_program', 'hello', 'show_all_phones'):
                 return "ERROR: This command has to be written without arguments!"
-            if f_name in ('show_phone', 'days_to_birthday', 'find_contacts'):
+            if f_name in ('show_phone', 'days_to_birthday', 'find_contacts', 'remove_contact',
+                          'show_email', 'remove_birthday'):
                 return "ERROR: This command needs 1 arguments: " \
                        f"'{'search_word' if f_name == 'find_contacts' else 'name'}' separated by 1 space! "
+            if f_name in ('birthday_in',):
+                return "ERROR: This command needs 1 obligatory argument 'days_to_birthday'!"
             if f_name in ('add_contact',):
                 return "ERROR: This command needs 1 obligatory argument 'name' and 3 supplementary " \
                        "'phone', 'email' and 'birthday' separated by 1 space!"
-            if f_name in ('edit_birthday',):
+            if f_name in ('change_birthday',):
                 return "ERROR: This command needs 2 arguments: 'name' and 'birthday' separated by 1 space!"
+            if f_name in ('remove_email',):
+                return "ERROR: This command needs 2 arguments: 'name' and 'email' separated by 1 space!"
             if f_name in ('remove_phone',):
                 return "ERROR: This command needs 2 arguments: 'name' and 'phone' separated by 1 space!"
-            if f_name in ('edit_phone',):
+            if f_name in ('change_phone',):
                 return "ERROR: This command needs 3 arguments: 'name', 'phone' and 'new_phone' separated by 1 space!"
             if f_name in ('edit_email',):
                 return "ERROR: This command needs 3 arguments: 'name', 'email' and 'new_email' separated by 1 space!"
