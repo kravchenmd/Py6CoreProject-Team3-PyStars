@@ -93,6 +93,10 @@ def main():
             mode = 'Sorting'
             print("\nMode: Sorting")
 
+            if terminal_run:
+                command_completer = WordCompleter(
+                    ['help', 'close', 'exit', 'goodbye', 'sort_folder'])
+
     print("***For help type `help` command**\n")
 
     while True:
