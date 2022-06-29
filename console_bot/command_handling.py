@@ -86,7 +86,6 @@ def address_book_choose_command(cmd: list) -> tuple:
             return None, "Unknown command!"
 
 
-# TODO Finist commands and docstring
 def notes_choose_command(cmd: list) -> tuple:
     """
     Commands for Notes mode:
@@ -95,8 +94,8 @@ def notes_choose_command(cmd: list) -> tuple:
     - `edit` - редактирование заметки (формат команды - через пробел - номер заметки - новый текст и тег заметки)
     - `delete` - удаление заметки (необходимо внести порядковый номер заметки)
     - `show` - вывести все заметки в формате: номер тег текст
-    - `new tag` - добавить тег к существующей заметке. Формат: номер заметки новый тег (с симоволом #)
-    - `sort by tag` - сортировать заметки по тегам
+    - `new tag`, `new_tag` - добавить тег к существующей заметке. Формат: номер заметки новый тег (с симоволом #)
+    - `sort by tag`, sort_by_tag - сортировать заметки по тегам
     - 'back' - return to the main menu, повернутися в головне меню
     - `exit` - выход из программы. Также, во время выхода Notes сохраняются в 'database/notes_db.bin'
     """
@@ -110,9 +109,9 @@ def notes_choose_command(cmd: list) -> tuple:
             return n.edit_note, args
         case ['delete', *args]:
             return n.delete_note, args
-        case ['new', 'tag', *args]:
+        case ['new', 'tag', *args] | ['new_tag', *args]:
             return n.new_tag, args
-        case ['sort', 'by', 'tag', *args]:
+        case ['sort', 'by', 'tag', *args] | ['sort_by_tag', *args]:
             return n.sort_by_tag, []
         case['exit', *args]:
             return n.exit_notes, []
@@ -160,9 +159,12 @@ def handle_cmd(cmd: str, arg: Union[AddressBook, Notes, None], mode: str) -> tup
             return None, "ERROR: Unknown mode!"
 
     func, result = choose_command(cmd)
-    if func and mode != 'Notes':
-        args = [arg] + result if func not in (f.hello, f.exit_program, f.back) else result
-        # else part to take into account hello() and show()
+
+    if mode != 'Notes' and func is not None:
+        if mode == 'AddressBook':
+            args = [arg] + result if func not in (f.hello, f.exit_program, f.back) else result
+        else:  # for Sorting mode
+            args = result
         result = func(*args)
 
     return func, result
