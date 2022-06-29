@@ -105,6 +105,7 @@ def delete_note(notes, args):
 
 
 # TODO 3 (Lara): change signature, see TODO 1
+@input_error
 def new_tag(notes, *args):
     note_number = int(args[0][0])
     tag = args[0][1]
@@ -139,7 +140,7 @@ def show_notes(notes, *args):
 
 
 def exit_notes(notes, *args):
-    path = '../database/notes_db.bin'
+    path = './database/notes_db.bin'
     with open(path, 'wb') as file:
         pickle.dump(notes, file)
     return f'Your notes saved in file {path}. Good bye!'
