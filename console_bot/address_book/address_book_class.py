@@ -195,7 +195,7 @@ class Record:
 
 
 class AddressBook(UserDict):
-    save_path = './console_bot/database/contacts_db'  # for auto-saving
+    save_path = './database/contacts_db'  # for auto-saving
 
     def __init__(self, pagination: int = 2) -> None:
         super().__init__()
