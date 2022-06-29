@@ -49,7 +49,7 @@ def main():
         if keyboard.is_pressed('2'):
             mode = 'Notes'
 
-            path = 'database/notes_db.bin'
+            path = '../database/notes_db.bin'
             if os.path.isfile(path):
                 with open(path, 'rb') as file:
                     notes = pickle.load(file)
