@@ -1,1 +1,5 @@
-3keyboard==0.13.5
+keyboard==0.13.5
+Markdown==3.3.7
+prompt-toolkit==3.0.30
+psutil==5.9.1
+wcwidth==0.2.5
