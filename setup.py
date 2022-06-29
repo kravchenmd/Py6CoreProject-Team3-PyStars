@@ -16,6 +16,6 @@ setup(
     packages=find_namespace_packages(),
     include_package_data=True,
     install_requires=['python_version>="3.10"', 'markdown', 'keyboard',
-                      'prompt_toolkit', 'psutil', 'wcwidth'],
+                      'prompt_toolkit', 'psutil'],
     entry_points={'console_scripts': ['console_bot=console_bot.main:main']}
 )
