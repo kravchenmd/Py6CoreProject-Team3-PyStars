@@ -151,9 +151,11 @@ def handle_cmd(cmd: str, arg: Union[AddressBook, Notes, None], mode: str) -> tup
             return None, "ERROR: Unknown mode!"
 
     func, result = choose_command(cmd)
-    if func and mode != 'Notes':
-        args = [arg] + result if func not in (f.hello, f.exit_program) else result
-        # else part to take into account hello() and show()
+    if mode != 'Notes' and func is not None:
+        if mode == 'AddressBook':
+            args = [arg] + result if func not in (f.hello, f.exit_program) else result
+        else:  # for Sorting mode
+            args = result
         result = func(*args)
 
     return func, result

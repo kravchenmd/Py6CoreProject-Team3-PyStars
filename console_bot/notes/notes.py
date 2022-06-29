@@ -131,6 +131,7 @@ def sort_by_tag(notes, *args):
                     notes.data[j], notes.data[j + 1] = notes.data[j+1], notes.data[j]
     return res + show_notes(notes)
 
+
 def show_notes(notes, *args):
     res = ""
     for note in notes.data:
@@ -139,7 +140,7 @@ def show_notes(notes, *args):
 
 
 def exit_notes(notes, *args):
-    path = '../database/notes_db.bin'
+    path = './database/notes_db.bin'
     with open(path, 'wb') as file:
         pickle.dump(notes, file)
     return f'Your notes saved in file {path}. Good bye!'
