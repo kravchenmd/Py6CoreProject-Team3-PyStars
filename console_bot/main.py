@@ -50,6 +50,7 @@ def main():
             input()
             mode = 'AddressBook'
             contacts = AddressBook()
+            arg = contacts
 
             # Load contacts from file
             data, result = contacts.load_from()
@@ -57,6 +58,7 @@ def main():
                 contacts.data = data
             print(f"\n{result}")
 
+            # TODO: add the same to mode of Notes and Sorting
             if terminal_run:
                 command_completer = WordCompleter(
                     ['help', 'exit', 'hello', 'add_contact', 'remove_contact', 'change_phone', 'remove_phone',
@@ -95,6 +97,7 @@ def main():
             command = input('Enter command: ')
 
         func, result = handle_cmd(command, arg, mode)
+
         if mode == 'Notes':
             print(func(notes, result))
         else:
