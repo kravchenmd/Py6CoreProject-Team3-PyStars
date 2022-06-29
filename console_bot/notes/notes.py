@@ -9,9 +9,21 @@ class Note:
     def __init__(self, text: str, tags: list | None = None):
         self.text = text
         self.tags = [] if tags is None else tags  # to exclude the issue with mutable objects
+        self.tags.sort() #to store sorted tags
 
     def __str__(self):
         return " ".join(self.tags) + " " + self.text
+
+    # function to compare instances of Note (>)
+    def __gt__(self, other):
+        res = True
+        if len(self.tags) == 0:
+            res = False
+        elif len(other.tags) == 0:
+            res = True
+        else:
+            res = self.tags[0] > other.tags[0]
+        return res
 
 
 class Notes(UserList):
@@ -59,6 +71,7 @@ def find_text(notes, args: list):
 
 # TODO 1 (Lara): change signature to `def edit_note(notes, note_number, *args)`
 # to exclude args with two indexes (args[0][0])
+# Lara: the issue is function can take only 2 arguments, not 3. And the second one is list
 @input_error
 def edit_note(notes, *args):
     note_number = int(args[0][0])
@@ -104,13 +117,24 @@ def new_tag(notes, *args):
 
 
 def sort_by_tag(notes, *args):
-    pass
-
+    res = '\tNotes sorted by tag:\n'
+    number_of_notes = len(notes.data)
+    if number_of_notes == 1:
+        notes_sorted = notes
+    if number_of_notes == 2:
+        if notes.data[0] > notes.data[1]:
+            notes.data[0], notes.data[1] = notes.data[1], notes.data[0]
+    if number_of_notes >2:
+        for i in range(len(notes.data) - 1):
+            for j in range(len(notes.data) - 1 - i):
+                if notes.data[j] > notes.data[j+1]:
+                    notes.data[j], notes.data[j + 1] = notes.data[j+1], notes.data[j]
+    return res + show_notes(notes)
 
 def show_notes(notes, *args):
     res = ""
     for note in notes.data:
-        res += '\t' + '{:<4}'.format(notes.data.index(note)) + str(note) + "\n"
+        res += '\t' + '{:<4}'.format(notes.data.index(note)) + str(note) + '\n'
     return res
 
 
