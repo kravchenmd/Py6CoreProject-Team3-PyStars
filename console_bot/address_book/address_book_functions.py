@@ -226,6 +226,11 @@ def remove_birthday(contacts: AddressBook, name: str) -> str:
 
 
 @func_arg_error
+def back():
+    return
+
+
+@func_arg_error
 def exit_program():
     return "Good bye!"
 
