@@ -71,7 +71,7 @@ def main():
                 command_completer = WordCompleter(
                     ['help', 'exit', 'hello', 'add_contact', 'remove_contact', 'change_phone', 'remove_phone',
                      'show_email', 'change_email', 'remove_email', 'show_phones', 'show_all', 'edit_birthday',
-                     'days_to_birthday' 'birthday_in', 'save', 'load', 'find_contact'])
+                     'days_to_birthday' 'birthday_in', 'save', 'load', 'find_contact', 'back'])
 
         if keyboard.is_pressed('2'):
             input()
