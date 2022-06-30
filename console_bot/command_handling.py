@@ -21,7 +21,7 @@ def address_book_choose_command(cmd: list) -> tuple:
     Commands for AddressBook mode:
     - `close`, `exit`, `goodbye` - выход из программы
     - `hello` - выводит приветствие
-    - 'back' - return to the main menu
+    - 'back' - вернуться в главное меню выбора режима работы бота
     - `add contact`, `add_contact` - добавление контакта в книгу
     - `remove contact`, `remove_contact` - удаление контакта из книги
     - `change phone`, `change_phone` - изменение номера контакта
@@ -96,7 +96,7 @@ def notes_choose_command(cmd: list) -> tuple:
     - `show` - вывести все заметки в формате: номер тег текст
     - `new tag`, `new_tag` - добавить тег к существующей заметке. Формат: номер заметки новый тег (с симоволом #)
     - `sort by tag`, sort_by_tag - сортировать заметки по тегам
-    - 'back' - return to the main menu, повернутися в головне меню
+    - 'back' - вернуться в главное меню для выбора режима работы бота
     - `exit` - выход из программы. Также, во время выхода Notes сохраняются в 'database/notes_db.bin'
     """
 
