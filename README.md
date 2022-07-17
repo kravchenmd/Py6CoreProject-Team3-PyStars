@@ -1,20 +1,20 @@
 # Py6Core: Project, Team 3 'PyStars'
 
 
-<!-- Team -->
+## Team
 
 - :star: Michail Kravchenko (Team Leader)
 - :star: Larysa Dmytrenko (Scrum Master)
 - :star: Andrij Prytulskij (Presentation Manager)
 
 
-<!-- Notes -->
+## Notes
 - для правильного запуска через терминал PyCharm нужно запускать как пакет через команду: `py -m console_bot.main`в корневой папке проекта
   (См. https://stackoverflow.com/questions/50745094/modulenotfounderror-when-running-script-from-terminal)
 - для избежания проблем со сторонними пакетами при установке с test.pypi нужно использовать команду: `pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple console-bot-pystars`. С ключом `--extra-index-url` сторонние пакеты (подхватываются из параметра `install_requires' в файле `setup.py`) будут загружены установлены с pypi.org, а сам пакет - с test.pypi.org.
 
 
-<!-- ABOUT THE PROJECT -->
+## ABOUT THE PROJECT
 
 Консольный бот имеет 3 режима для структурирования и хранения ваших данных.
 
@@ -26,7 +26,7 @@
 В каждом режиме команда "help" выводит список всех доступных команд.
 Данные, введенные пользователем в каждом режиме, сохраняются в папке пользователя и доступны при следующем запуске.
 
-## Список команд Address Book
+### Список команд Address Book
 
 - `close`, `exit`, `goodbye` - выход из программы
 - `hello` - выводит приветствие
@@ -44,7 +44,7 @@
 - `load` - загрузить контакты из файла, с использованием модуля `shelve`. По умолчанию загружается из 'database/contacts.db'
 - `find` - поиск контакта по имени или номеру телефона (ищет вхождения строки в этих полях)
 
-## Список команд Notes
+### Список команд Notes
 - `add` - добавление новой заметки в Notes
 - `find` - поиск заметки по любому фрагменту (фрагмент заметки ввести через пробел) выводит все заметки, в которых найден указанный фрагмент
 - `edit` - редактирование заметки (формат команды - через пробел - номер заметки - новый текст и тег заметки)
@@ -55,7 +55,7 @@
 - `back` - вернуться в главное меню для выбора режима работы бота
 - `exit` - выход из программы. Также, во время выхода Notes сохраняются в 'database/notes_db.bin'
 
-## Список команд Sorting mode:
+### Список команд Sorting mode:
 - `close`, `exit`, `goodbye` - exit the program
 - `sort folder _path_`, `sort_folder _path_`: sort the contacts by name
 - `back`: return to the main menu
