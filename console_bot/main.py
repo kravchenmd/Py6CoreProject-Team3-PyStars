@@ -5,6 +5,7 @@ import time
 from importlib.resources import files
 
 import keyboard
+import psutil
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
@@ -15,33 +16,19 @@ from console_bot.notes import notes_class as n
 from console_bot.notes.notes_class import Notes
 
 
-# if os.path.dirname(os.path.dirname(os.path.abspath(__file__))) not in sys.path:
-#     # Script from terminal
-#     print(1)
-#     # import console_bot
-#     from address_book import address_book_functions as f
-#     from notes import notes_class
-#     from notes import notes_class as n
-#     from address_book.address_book_class import AddressBook
-#     from notes.notes_class import Notes
-#     from command_handling import handle_cmd
-# else:
-
-
 def main():
     mode = None
     # contacts = None
-    # notes = None
+    notes = None
     arg = None  # argument to pass to `handle_cmd()` depending on the mode
     terminal_run = False  # for prompt_toolkit
     command_completer = None
 
-    # # Check if program is running PyCharm or cmd, bash, etc. for prompt_toolkit
-    # shells = {"cmd.exe", "bash.exe", "powershell.exe", "WindowsTerminal.exe"}
-    # parents = {parent.name() for parent in psutil.Process().parents()}
-    # if bool(parents & shells):
-    #     terminal_run = True
-    # print(terminal_run)
+    # Check if program is running PyCharm or cmd, bash, etc. for prompt_toolkit
+    shells = {"cmd.exe", "bash.exe", "powershell.exe", "WindowsTerminal.exe"}
+    parents = {parent.name() for parent in psutil.Process().parents()}
+    if bool(parents & shells):
+        terminal_run = True
 
     start_message = "*** Console bot project ***\n" \
                     "***  Team #3 - PyStars  ***\n"
@@ -67,12 +54,9 @@ def main():
             arg = contacts
 
             # Load contacts from file
-            data, result = contacts.load_from()
-            if not (data is None):
-                contacts.data = data
+            result = contacts.load_from()
             print(f"\n{result}")
 
-            # TODO: add the same to mode of Notes and Sorting
             if terminal_run:
                 command_completer = WordCompleter(
                     ['help', 'exit', 'hello', 'add_contact', 'remove_contact', 'change_phone', 'remove_phone',
