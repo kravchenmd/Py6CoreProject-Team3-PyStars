@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Union, Dict
 
+from importlib.resources import files
+
 
 class FieldException(Exception):
     pass
@@ -199,7 +201,7 @@ class Record:
 
 
 class AddressBook(UserDict):
-    save_path = './database/contacts_db'  # for auto-saving
+    save_path = 'database/contacts_db'  # for auto-saving
 
     def __init__(self, pagination: int = 2) -> None:
         super().__init__()
@@ -250,14 +252,16 @@ class AddressBook(UserDict):
 
     @staticmethod
     def load_from(filename: str = save_path) -> tuple:
-        path = Path(filename)
+        my_resources = files("console_bot")
+        path = Path(my_resources / filename)
+        print(path)
         if not path.exists():
-            return None, f"File '{filename}' does not exist!"
+            return None, f"File '{path.name}' does not exist!"
 
         with shelve.open(filename) as db:
             _ = AddressBook()
             _.data = db['contacts']
-            return _.data, f"Contacts have been loaded from '{filename}' successfully!"
+            return _.data, f"Contacts have been loaded from '{path.name}' successfully!"
 
     def find(self, search_string: str) -> str:
         result = ''

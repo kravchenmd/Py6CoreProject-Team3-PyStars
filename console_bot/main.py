@@ -2,40 +2,46 @@ import os
 import pickle
 import sys
 import time
+from importlib.resources import files
 
 import keyboard
-import psutil
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
+from console_bot.address_book import address_book_functions as f
+from console_bot.address_book.address_book_class import AddressBook
+from console_bot.command_handling import handle_cmd
+from console_bot.notes import notes_class as n
+from console_bot.notes.notes_class import Notes
 
-if os.path.dirname(os.path.dirname(os.path.abspath(__file__))) not in sys.path:
-    from address_book import address_book_functions as f
-    from notes import notes as n
-    from address_book.address_book_class import AddressBook
-    from notes.notes import Notes
-    from command_handling import handle_cmd
-else:
-    from console_bot.address_book import address_book_functions as f
-    from console_bot.notes import notes as n
-    from console_bot.address_book.address_book_class import AddressBook
-    from console_bot.notes.notes import Notes
-    from console_bot.command_handling import handle_cmd
+
+# if os.path.dirname(os.path.dirname(os.path.abspath(__file__))) not in sys.path:
+#     # Script from terminal
+#     print(1)
+#     # import console_bot
+#     from address_book import address_book_functions as f
+#     from notes import notes_class
+#     from notes import notes_class as n
+#     from address_book.address_book_class import AddressBook
+#     from notes.notes_class import Notes
+#     from command_handling import handle_cmd
+# else:
 
 
 def main():
     mode = None
     # contacts = None
-    notes = None
+    # notes = None
     arg = None  # argument to pass to `handle_cmd()` depending on the mode
     terminal_run = False  # for prompt_toolkit
     command_completer = None
 
-    # Check if program is running PyCharm or cmd, bash, etc. for prompt_toolkit
-    shells = {"cmd.exe", "bash.exe", "powershell.exe", "WindowsTerminal.exe"}
-    parents = {parent.name() for parent in psutil.Process().parents()}
-    if bool(parents & shells):
-        terminal_run = True
+    # # Check if program is running PyCharm or cmd, bash, etc. for prompt_toolkit
+    # shells = {"cmd.exe", "bash.exe", "powershell.exe", "WindowsTerminal.exe"}
+    # parents = {parent.name() for parent in psutil.Process().parents()}
+    # if bool(parents & shells):
+    #     terminal_run = True
+    # print(terminal_run)
 
     start_message = "*** Console bot project ***\n" \
                     "***  Team #3 - PyStars  ***\n"
@@ -77,7 +83,9 @@ def main():
             input()
             mode = 'Notes'
 
-            path = './database/notes_db.bin'
+            my_resources = files('console_bot')
+            path = str(my_resources / 'database/notes_db.bin')
+
             if os.path.isfile(path):
                 with open(path, 'rb') as file:
                     notes = pickle.load(file)

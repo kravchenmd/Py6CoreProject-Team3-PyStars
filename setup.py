@@ -3,7 +3,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name='console_bot',
-    version='0.1.7',
+    version='0.1.11',
     description='Py6Core Final Project: Console bot',
     author='PyStars',
     author_email='pystars@gmail.com',
