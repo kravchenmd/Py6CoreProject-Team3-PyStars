@@ -1,10 +1,12 @@
 # for rising custom errors in 'add_contact' function
+import os
+import pickle
 import re
-import shelve
 from collections import UserDict
-from datetime import datetime
-from pathlib import Path
+from datetime import datetime, timedelta
 from typing import Union, Dict
+
+from importlib.resources import files
 
 
 class FieldException(Exception):
@@ -82,20 +84,49 @@ class Birthday(Field):
         return self.value.day
 
 
+class Email(Field):
+    def __init__(self, value: str = '') -> None:
+        super().__init__(value)
+
+    @Field.value.setter
+    def value(self, value: str) -> None:
+        # verification parameters:
+        # starts from letter, Latin letters and numbers, @, letters divided by 1 dot
+        pattern = r'\b[a-zA-Z]{1}[\w]+@[a-zA-Z]+\.[a-zA-Z]+'
+        if re.match(pattern, value):
+            Field.value.fset(self, value)
+        else:
+            raise ValueError("Check please email format:\n" +
+                             "Example: user01@domain.com")
+
+    def get_email(self) -> str:
+        return self.value
+
+
 class Record:
     def __init__(self, name: Name) -> None:
         self.name: Name = name
         self.phone_list: list[Phone] = []
+        self.email_list: list[Email] = []
         self.birthday: Union[Birthday, None] = None
 
     def __str__(self) -> str:
-        return f"{self.name.get_name() : <10}:\t{self.get_phones() : ^13}\t{self.get_birthday() : >10}\n"
+        # return f"{self.name.get_name() : <15}:\t{self.get_phones() : ^13}" \
+        #        f"\t{self.get_emails() : ^12}\t{self.get_birthday() : >10}\n"
+        return '{:<15}: '.format('Name') + f'\t{self.name.get_name()}\n' +\
+               '{:>15}: '.format('phones') + f'\t{self.get_phones()}\n' +\
+               '{:>15}: '.format('emails') + f'\t{self.get_emails()}\n' +\
+               '{:>15}: '.format('birthday') + f'\t{self.get_birthday()}\n\n'\
+
+
+    def __contains__(self, item):  # to short this checking in code
+        return item.get_phone() in [phone.get_phone() for phone in self.phone_list]
 
     def add_phone(self, phone: Phone) -> str:
-        if phone.get_phone() in [phone.get_phone() for phone in self.phone_list]:
+        if phone in self:
             raise FieldException("This phone number is already in the list of the contact!")
         self.phone_list.append(phone)
-        return "Contact was updated successfully!"
+        return "Contact has been updated successfully!"
 
     def get_phones(self) -> str:  # return phones in one string
         if not self.phone_list:
@@ -103,21 +134,21 @@ class Record:
         return ', '.join([phone.get_phone() for phone in self.phone_list])
 
     def remove_phone(self, phone: Phone) -> str:
-        if phone.get_phone() not in [el.get_phone() for el in self.phone_list]:
+        if phone not in self:
             return "Phone can't be removed: it's not in the list of the contact!"
         for el in self.phone_list:
             if el.get_phone() == phone.get_phone():
                 self.phone_list.remove(el)
-        return "Phone was removed successfully!"
+        return "Phone has been removed successfully!"
 
-    def edit_phone(self, phone: Phone, new_phone: Phone) -> str:
-        if phone.get_phone() not in [el.get_phone() for el in self.phone_list]:
+    def change_phone(self, phone: Phone, new_phone: Phone) -> str:
+        if phone not in self:
             return "Phone can't be changed: it's not in the list of the contact!"
         for el in self.phone_list:
             if el.get_phone() == phone.get_phone():
                 self.phone_list.remove(el)
                 self.phone_list.append(new_phone)
-                return f"Phone number was changed successfully!"
+                return f"Phone number has been changed successfully!"
 
     def add_birthday(self, birthday: Birthday) -> None:
         if self.birthday is not None:
@@ -129,14 +160,50 @@ class Record:
             return '-'
         return self.birthday.birthday_date()
 
-    def edit_birthday(self, new_birthday: Birthday) -> str:
+    def change_birthday(self, new_birthday: Birthday) -> str:
         if self.birthday is None:
             return "Birthday field of this contact is empty: fill it!"
         self.birthday = new_birthday
-        return f"Birthday was changed successfully!"
+        return f"Birthday has been changed successfully!"
+
+    def remove_birthday(self):
+        if self.birthday is None:
+            return "Birthday field of this contact is empty!"
+        self.birthday = None
+        return f"Birthday has been removed successfully!"
+
+    def add_email(self, email: Email) -> str:
+        if email.get_email() in [email.get_email() for email in self.email_list]:
+            raise FieldException("This email is already in the list of the contact!")
+        self.email_list.append(email)
+        return "Contact was updated successfully!"
+
+    def get_emails(self) -> str:  # return emails in one string
+        if not self.email_list:
+            return '-'
+        return ', '.join([email.get_email() for email in self.email_list])
+
+    def remove_email(self, email: Email) -> str:
+        if email.get_email() not in [el.get_email() for el in self.email_list]:
+            return "Email can't be removed: it's not in the list of the contact!"
+        for el in self.email_list:
+            if el.get_email() == email.get_email():
+                self.email_list.remove(el)
+        return "Email was removed successfully!"
+
+    def edit_email(self, email: Email, new_email: Email) -> str:
+        if email.get_email() not in [el.get_email() for el in self.email_list]:
+            return "Email can't be changed: it's not in the list of the contact!"
+        for el in self.email_list:
+            if el.get_email() == email.get_email():
+                self.email_list.remove(el)
+                self.email_list.append(new_email)
+                return f"Email number was changed successfully!"
 
 
 class AddressBook(UserDict):
+    save_path = 'database/contacts_db.bin'  # for auto-saving
+
     def __init__(self, pagination: int = 2) -> None:
         super().__init__()
         self.pagination = pagination
@@ -173,37 +240,26 @@ class AddressBook(UserDict):
     def add_record(self, name: str, record: Record) -> None:
         self.data[name] = record
 
-    def save_to(self, filename: str = 'database/contacts_db') -> str:
-        path = Path(filename)
-        path.mkdir(parents=True, exist_ok=True)
+    def remove_record(self, name: str):
+        self.data.pop(name)
 
-        with shelve.open(filename) as db:
-            db['contacts'] = dict(self.data)
-        return f"Contacts were saved to '{filename}' successfully!"
+    def save_to(self, filename: str = save_path) -> str:
+        if filename != AddressBook.save_path:
+            AddressBook.save_path = filename
+        my_resources = files("console_bot")
+        path = str(my_resources / filename)
+        with open(path, 'wb') as file:
+            pickle.dump(self.data, file)
+        return f'Contacts have been saved in file {path} successfully!'
 
-    @staticmethod
-    def load_from(filename: str = 'database/contacts_db'):
-        path = Path(filename)
-        if not path.exists():
-            return None, f"File '{filename}' does not exist!"
-
-        with shelve.open(filename) as db:
-            _ = AddressBook()
-            _.data = db['contacts']
-            return _.data, f"Contacts were loaded from '{filename}' successfully!"
-
-    # Just for myself to remember
-
-    # def load(self, filename: str = 'database/contacts_db') -> str:
-    #     path = Path(filename)
-    #     if not path.exists():
-    #         return f"File '{filename}' does not exist!"
-    #
-    #     with shelve.open(filename) as db:
-    #         self.data = db['contacts']
-    #         # temporary hot-fix because otherwise PyCharm complains about type of db['contacts'] or
-    #         # noinspection PyTypeChecker
-    #     return f"Contacts were loaded from '{filename}' successfully!"
+    def load_from(self, filename: str = save_path) -> str:
+        my_resources = files('console_bot')
+        path = str(my_resources / filename)
+        if os.path.isfile(path):
+            with open(path, 'rb') as file:
+                self.data = pickle.load(file)
+            return f"\nContacts have been loaded from '{filename}' successfully!"
+        return f"File '{filename}' does not exist!"
 
     def find(self, search_string: str) -> str:
         result = ''
@@ -212,3 +268,29 @@ class AddressBook(UserDict):
             if search_string.lower() in record.name.get_name().lower() or search_string in record.get_phones():
                 result += f"{record}"
         return result[:-1]  # remove last '\n'
+
+    def find_birthday(self, input_day):
+        found = ''
+        y = datetime.now()
+        y = y.year
+        current_date = datetime.now().date()
+        input_day = int(input_day)
+        b_day = timedelta(days=input_day) + current_date
+
+        for record in self.data.values():
+            i = record.get_birthday()
+            m_b = datetime.strptime(i, '%d.%m.%Y').date()
+            m_b = m_b.replace(year=y)
+            if b_day == m_b:
+                found += f'{record.name.get_name()}, '
+        if len(found) > 1:
+            return f'{found}has a birthday in this {input_day} days'
+        else:
+            return f'In {input_day} days there is no birthday'
+
+    def find_contact(self, search_string: str) -> str:
+
+        for record in self.data.values():
+
+            if search_string.lower() == record.name.get_name().lower():
+                return f'Search results for: "{search_string}" \n{record}'
