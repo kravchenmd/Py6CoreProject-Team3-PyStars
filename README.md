@@ -1,10 +1,18 @@
 # Py6Core: Project, Team 3 'PyStars'
 
+
 <!-- Team -->
 
 - :star: Michail Kravchenko (Team Leader)
 - :star: Larysa Dmytrenko (Scrum Master)
 - :star: Andrij Prytulskij (Presentation Manager)
+
+
+<!-- Notes -->
+- для правильного запуска через терминал PyCharm нужно запускать как пакет через команду: `py -m console_bot.main`в корневой папке проекта
+  (См. https://stackoverflow.com/questions/50745094/modulenotfounderror-when-running-script-from-terminal)
+- для избежания проблем со сторонними пакетами при установке с test.pypi нужно использовать команду: `pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple console-bot-pystars`. С ключом `--extra-index-url` сторонние пакеты (подхватываются из параметра `install_requires' в файле `setup.py`) будут загружены установлены с pypi.org, а сам пакет - с test.pypi.org.
+
 
 <!-- ABOUT THE PROJECT -->
 
@@ -36,7 +44,7 @@
 - `load` - загрузить контакты из файла, с использованием модуля `shelve`. По умолчанию загружается из 'database/contacts.db'
 - `find` - поиск контакта по имени или номеру телефона (ищет вхождения строки в этих полях)
 
-## Список команд Address Book
+## Список команд Notes
 - `add` - добавление новой заметки в Notes
 - `find` - поиск заметки по любому фрагменту (фрагмент заметки ввести через пробел) выводит все заметки, в которых найден указанный фрагмент
 - `edit` - редактирование заметки (формат команды - через пробел - номер заметки - новый текст и тег заметки)
