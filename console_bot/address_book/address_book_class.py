@@ -1,10 +1,12 @@
 # for rising custom errors in 'add_contact' function
+import os
+import pickle
 import re
-import shelve
 from collections import UserDict
 from datetime import datetime, timedelta
-from pathlib import Path
 from typing import Union, Dict
+
+from importlib.resources import files
 
 
 class FieldException(Exception):
@@ -116,6 +118,7 @@ class Record:
                '{:>15}: '.format('emails') + f'\t{self.get_emails()}\n' +\
                '{:>15}: '.format('birthday') + f'\t{self.get_birthday()}\n\n'\
 
+
     def __contains__(self, item):  # to short this checking in code
         return item.get_phone() in [phone.get_phone() for phone in self.phone_list]
 
@@ -199,7 +202,7 @@ class Record:
 
 
 class AddressBook(UserDict):
-    save_path = './database/contacts_db'  # for auto-saving
+    save_path = 'database/contacts_db.bin'  # for auto-saving
 
     def __init__(self, pagination: int = 2) -> None:
         super().__init__()
@@ -241,23 +244,22 @@ class AddressBook(UserDict):
         self.data.pop(name)
 
     def save_to(self, filename: str = save_path) -> str:
-        path = Path(filename)
-        path.mkdir(parents=True, exist_ok=True)
+        if filename != AddressBook.save_path:
+            AddressBook.save_path = filename
+        my_resources = files("console_bot")
+        path = str(my_resources / filename)
+        with open(path, 'wb') as file:
+            pickle.dump(self.data, file)
+        return f'Contacts have been saved in file {path} successfully!'
 
-        with shelve.open(filename) as db:
-            db['contacts'] = dict(self.data)
-        return f"Contacts have been saved to '{filename}' successfully!"
-
-    @staticmethod
-    def load_from(filename: str = save_path) -> tuple:
-        path = Path(filename)
-        if not path.exists():
-            return None, f"File '{filename}' does not exist!"
-
-        with shelve.open(filename) as db:
-            _ = AddressBook()
-            _.data = db['contacts']
-            return _.data, f"Contacts have been loaded from '{filename}' successfully!"
+    def load_from(self, filename: str = save_path) -> str:
+        my_resources = files('console_bot')
+        path = str(my_resources / filename)
+        if os.path.isfile(path):
+            with open(path, 'rb') as file:
+                self.data = pickle.load(file)
+            return f"\nContacts have been loaded from '{filename}' successfully!"
+        return f"File '{filename}' does not exist!"
 
     def find(self, search_string: str) -> str:
         result = ''

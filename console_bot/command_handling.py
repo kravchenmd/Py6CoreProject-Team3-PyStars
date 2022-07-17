@@ -1,19 +1,10 @@
-import os
-import sys
 from typing import Union
 
-if os.path.dirname(os.path.dirname(os.path.abspath(__file__))) not in sys.path:
-    from address_book import address_book_functions as f
-    from address_book.address_book_class import AddressBook
-    from notes.notes import Notes
-    from sorting.sort import sort_folder
-    from notes import notes as n
-else:
-    from .address_book import address_book_functions as f
-    from .address_book.address_book_class import AddressBook
-    from .notes.notes import Notes
-    from .sorting.sort import sort_folder
-    from .notes import notes as n
+from .address_book import address_book_functions as f
+from .address_book.address_book_class import AddressBook
+from .notes import notes_class as n
+from .notes.notes_class import Notes
+from .sorting.sort import sort_folder
 
 
 def address_book_choose_command(cmd: list) -> tuple:
@@ -90,18 +81,19 @@ def notes_choose_command(cmd: list) -> tuple:
     """
     Commands for Notes mode:
     - `add` - добавление новой заметки в Notes
-    - `find` - поиск заметки по любому фрагменту (фрагмент заметки ввести через пробел) выводит все заметки, в которых найден указанный фрагмент
+    - `find` - поиск заметки по любому фрагменту (фрагмент заметки ввести через пробел) выводит все заметки,
+    в которых найден указанный фрагмент
     - `edit` - редактирование заметки (формат команды - через пробел - номер заметки - новый текст и тег заметки)
     - `delete` - удаление заметки (необходимо внести порядковый номер заметки)
     - `show` - вывести все заметки в формате: номер тег текст
-    - `new tag`, `new_tag` - добавить тег к существующей заметке. Формат: номер заметки новый тег (с симоволом #)
+    - `new tag`, `new_tag` - добавить тег к существующей заметке. Формат: номер заметки новый тег (с символом #)
     - `sort by tag`, sort_by_tag - сортировать заметки по тегам
     - 'back' - вернуться в главное меню для выбора режима работы бота
     - `exit` - выход из программы. Также, во время выхода Notes сохраняются в 'database/notes_db.bin'
     """
 
     match cmd:
-        case['add', *args]:
+        case ['add', *args]:
             return n.add_note, args
         case ['find', *args]:
             return n.find_text, args
@@ -113,9 +105,9 @@ def notes_choose_command(cmd: list) -> tuple:
             return n.new_tag, args
         case ['sort', 'by', 'tag', *args] | ['sort_by_tag', *args]:
             return n.sort_by_tag, []
-        case['exit', *args]:
+        case ['exit', *args]:
             return n.exit_notes, []
-        case['show', *args]:
+        case ['show', *args]:
             return n.show_notes, []
         case ['back']:
             return f.back, []

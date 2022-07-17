@@ -2,25 +2,18 @@ import os
 import pickle
 import sys
 import time
+from importlib.resources import files
 
 import keyboard
 import psutil
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
-
-if os.path.dirname(os.path.dirname(os.path.abspath(__file__))) not in sys.path:
-    from address_book import address_book_functions as f
-    from notes import notes as n
-    from address_book.address_book_class import AddressBook
-    from notes.notes import Notes
-    from command_handling import handle_cmd
-else:
-    from console_bot.address_book import address_book_functions as f
-    from console_bot.notes import notes as n
-    from console_bot.address_book.address_book_class import AddressBook
-    from console_bot.notes.notes import Notes
-    from console_bot.command_handling import handle_cmd
+from console_bot.address_book import address_book_functions as f
+from console_bot.address_book.address_book_class import AddressBook
+from console_bot.command_handling import handle_cmd
+from console_bot.notes import notes_class as n
+from console_bot.notes.notes_class import Notes
 
 
 def main():
@@ -61,12 +54,9 @@ def main():
             arg = contacts
 
             # Load contacts from file
-            data, result = contacts.load_from()
-            if not (data is None):
-                contacts.data = data
+            result = contacts.load_from()
             print(f"\n{result}")
 
-            # TODO: add the same to mode of Notes and Sorting
             if terminal_run:
                 command_completer = WordCompleter(
                     ['help', 'exit', 'hello', 'add_contact', 'remove_contact', 'change_phone', 'remove_phone',
@@ -77,7 +67,9 @@ def main():
             input()
             mode = 'Notes'
 
-            path = './database/notes_db.bin'
+            my_resources = files('console_bot')
+            path = str(my_resources / 'database/notes_db.bin')
+
             if os.path.isfile(path):
                 with open(path, 'rb') as file:
                     notes = pickle.load(file)
