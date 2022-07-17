@@ -1,12 +1,5 @@
 from typing import Union
 
-# if os.path.dirname(os.path.dirname(os.path.abspath(__file__))) not in sys.path:
-#     from address_book import address_book_functions as f
-#     from address_book.address_book_class import AddressBook
-#     from notes.notes_class import Notes
-#     from sorting.sort import sort_folder
-#     from notes import notes_class as n
-# else:
 from .address_book import address_book_functions as f
 from .address_book.address_book_class import AddressBook
 from .notes import notes_class as n
