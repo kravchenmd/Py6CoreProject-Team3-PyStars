@@ -8,11 +8,14 @@
 - :star: Andrij Prytulskij (Presentation Manager)
 
 
-## Notes
-- для правильного запуска через терминал PyCharm нужно запускать как пакет через команду: `py -m console_bot.main`в корневой папке проекта
-  (См. https://stackoverflow.com/questions/50745094/modulenotfounderror-when-running-script-from-terminal)
-- для избежания проблем со сторонними пакетами при установке с test.pypi нужно использовать команду: `pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple console-bot-pystars`. С ключом `--extra-index-url` сторонние пакеты (подхватываются из параметра `install_requires' в файле `setup.py`) будут загружены установлены с pypi.org, а сам пакет - с test.pypi.org.
-  (См. https://stackoverflow.com/questions/34514703/pip-install-from-pypi-works-but-from-testpypi-fails-cannot-find-requirements)
+## Important notes
+- Для правильного запуска через терминал PyCharm нужно запускать как пакет через команду: `py -m console_bot.main`в корневой папке проекта
+
+(См. https://stackoverflow.com/questions/50745094/modulenotfounderror-when-running-script-from-terminal)
+
+- Для избежания проблем со сторонними пакетами при установке с test.pypi нужно использовать команду: `pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple console-bot-pystars`. С ключом `--extra-index-url` сторонние пакеты (подхватываются из параметра `install_requires' в файле `setup.py`) будут загружены установлены с pypi.org, а сам пакет - с test.pypi.org.
+  
+(См. https://stackoverflow.com/questions/34514703/pip-install-from-pypi-works-but-from-testpypi-fails-cannot-find-requirements)
 
 
 ## ABOUT THE PROJECT
